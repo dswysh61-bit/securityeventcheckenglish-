@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Security Assessment Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f2744;--navy2:#1a3a5c;--blue:#2563eb;--blue-light:#dbeafe;--green:#16a34a;--amber:#d97706;--red:#dc2626;--border:#e2e8f0;--bg:#f8fafc;--text:#1e293b;--muted:#64748b;--subtle:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:ltr}
+.top-strip{background:var(--navy);color:white;text-align:center;padding:10px;font-size:12px;letter-spacing:.05em}
+.page-header{background:var(--navy2);color:white;padding:2rem 1.5rem;text-align:center}
+.page-header h1{font-size:22px;font-weight:600;margin-bottom:6px}
+.page-header p{font-size:13px;opacity:.8;max-width:520px;margin:0 auto;line-height:1.6}
+.steps-bar{background:white;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;position:sticky;top:0;z-index:10}
+.step-btn{flex:1;min-width:0;padding:12px 8px;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;color:var(--muted);border:none;border-bottom:3px solid transparent;background:none;cursor:pointer;white-space:nowrap;transition:all .2s}
+.step-btn.active{color:var(--navy2);border-bottom-color:var(--navy2);background:#f8fafc}
+.step-btn.done{color:var(--green)}
+.container{max-width:700px;margin:2rem auto;padding:0 1rem}
+.card{background:white;border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.section-title{font-size:13px;font-weight:600;color:var(--navy2);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);padding-bottom:8px;margin:1.25rem 0 1rem}
+.section-title:first-child{margin-top:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.grid2{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;font-weight:600;color:var(--muted)}
+.field label .req{color:var(--red);margin-left:2px}
+.field input,.field select,.field textarea{border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:'Inter',sans-serif;background:white;color:var(--text);transition:border-color .15s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--navy2);box-shadow:0 0 0 3px rgba(26,58,92,.08)}
+.field.error input,.field.error select,.field.error textarea{border-color:var(--red)}
+.field .err-msg{font-size:11px;color:var(--red);display:none}
+.field.error .err-msg{display:block}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.radio-group{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.radio-opt{display:flex;align-items:center;gap:7px;cursor:pointer;padding:7px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;transition:all .15s;background:white}
+.radio-opt:hover{border-color:var(--navy2)}
+.radio-opt input{accent-color:var(--navy2);width:15px;height:15px}
+.radio-opt.checked{border-color:var(--navy2);background:var(--blue-light);color:var(--navy2)}
+.radio-group.error .radio-opt{border-color:var(--red)}
+.radio-err{font-size:11px;color:var(--red);display:none;margin-top:4px}
+.radio-err.show{display:block}
+.cond{display:none;margin-top:10px;padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid var(--navy2)}
+.cond.show{display:block}
+.cb-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px;margin-top:6px}
+.cb-item{display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:6px 10px;border:1px solid var(--border);border-radius:7px;transition:border-color .1s;background:white}
+.cb-item:hover{border-color:var(--navy2)}
+.cb-item input{accent-color:var(--navy2)}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)}
+.btn-next{background:var(--navy2);color:white;border:none;border-radius:8px;padding:10px 28px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.btn-next:hover{background:var(--navy)}
+.btn-prev{background:white;border:1px solid var(--border);border-radius:8px;padding:10px 22px;font-size:13px;cursor:pointer;color:var(--muted);font-family:'Inter',sans-serif}
+.btn-prev:disabled{opacity:.3;cursor:default}
+.step-ind{font-size:12px;color:var(--muted)}
+.success{display:none;text-align:center;padding:3rem 2rem}
+.success.show{display:block}
+.success-icon{width:64px;height:64px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:30px}
+.ref-box{display:inline-block;background:var(--blue-light);color:var(--navy2);font-size:20px;font-weight:700;padding:10px 28px;border-radius:8px;letter-spacing:.1em;margin:12px 0}
+.overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-size:14px;color:var(--navy2);font-weight:600}
+.overlay.show{display:flex}
+.spinner{width:38px;height:38px;border:4px solid var(--border);border-top-color:var(--navy2);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fb-config-banner{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;margin-bottom:1rem;font-size:12px;color:#92400e;line-height:1.6;display:none}
+.fb-config-banner.show{display:block}
+.fb-config-banner code{background:#fef3c7;padding:2px 6px;border-radius:4px;font-size:11px}
+.err-shake{animation:shake .35s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+</style>
+</head>
+<body>
+
+<script>
+  var FIREBASE_URL = 'https://security-event-check-default-rtdb.europe-west1.firebasedatabase.app';
+</script>
+
+<div class="overlay" id="overlay"><div class="spinner"></div><span>Submitting form...</span></div>
+
+<div class="top-strip">🔒 Security Risk Assessment System — Secure Form</div>
+
+<div class="page-header">
+  <h1>Event Security Assessment Form</h1>
+  <p>Please fill in the details below. This information will be used to assess the required security level for your event.</p>
+</div>
+
+<div class="steps-bar">
+  <button class="step-btn active" onclick="goToStep(0)">1 — Organisation</button>
+  <button class="step-btn" onclick="goToStep(1)">2 — Event Details</button>
+  <button class="step-btn" onclick="goToStep(2)">3 — Audience &amp; Publicity</button>
+  <button class="step-btn" onclick="goToStep(3)">4 — Risks &amp; Security</button>
+  <button class="step-btn" onclick="goToStep(4)">5 — Submit</button>
+</div>
+
+<div class="container">
+
+<div class="fb-config-banner" id="configBanner">
+  ⚠️ <strong>Firebase is not configured yet.</strong> The form will work but data will not be saved to the server.<br>
+  To connect: edit the <code>FIREBASE_URL</code> variable at the top of the file.
+</div>
+
+<!-- ===== STEP 0 — Organisation ===== -->
+<div id="step0">
+  <div class="card">
+    <div class="section-title">Organisation Details</div>
+    <div class="grid2">
+      <div class="field" id="f_org">
+        <label><span class="req">*</span>Under the auspices of</label>
+        <input id="org" type="text" placeholder="Name of organising body...">
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field" id="f_personalid">
+        <label><span class="req">*</span>Personal ID number</label>
+        <input id="personalid" type="text" placeholder="Filled in by each staff member...">
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field" style="grid-column:1/-1">
+        <label>Invitation link (if available)</label>
+        <input id="invitelink" type="text" placeholder="https://...">
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:14px" id="f_orgknown_radio">
+      <label>Is the organiser known / familiar, or unknown personally? <span class="req">*</span></label>
+      <div class="radio-group" id="rg_orgknown">
+        <label class="radio-opt" onclick="setRadio('orgknown','ידוע ומוכר',this,'cond_orgknown','ידוע ומוכר')">
+          <input type="radio" name="orgknown" value="ידוע ומוכר"> Known &amp; familiar
+        </label>
+        <label class="radio-opt" onclick="setRadio('orgknown','לא מוכר אישית',this,'cond_orgknown','ידוע ומוכר')">
+          <input type="radio" name="orgknown" value="לא מוכר אישית"> Not personally known
+        </label>
+      </div>
+      <span class="radio-err" id="err_orgknown">Please select an option</span>
+      <div class="cond" id="cond_orgknown">
+        <div class="field" id="f_orgknown_detail">
+          <label><span class="req">*</span>Detail — how is the organiser known?</label>
+          <input type="text" id="orgknown_detail" placeholder="How the organiser is known, from which context...">
+          <span class="err-msg">Required when organiser is known &amp; familiar</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Contact Details</div>
+    <div class="grid2">
+      <div class="field" id="f_fname">
+        <label><span class="req">*</span>First name</label>
+        <input id="fname" type="text">
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field" id="f_lname">
+        <label><span class="req">*</span>Last name</label>
+        <input id="lname" type="text">
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="name@org.com">
+      </div>
+      <div class="field" id="f_phone">
+        <label><span class="req">*</span>Phone</label>
+        <input id="phone" type="tel" placeholder="+44 7000 000000">
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field">
+        <label>Role / Title</label>
+        <input id="role" type="text" placeholder="Role / title...">
+      </div>
+    </div>
+  </div>
+  <div class="nav">
+    <button class="btn-prev" disabled>← Previous</button>
+    <span class="step-ind">Step 1 of 5</span>
+    <button class="btn-next" onclick="nextStep(0)">Next →</button>
+  </div>
+</div>
+
+<!-- ===== STEP 1 — Event Details ===== -->
+<div id="step1" style="display:none">
+  <div class="card">
+    <div class="section-title">Event Details</div>
+    <div class="grid2">
+      <div class="field" style="grid-column:1/-1" id="f_evname">
+        <label><span class="req">*</span>Event name</label>
+        <input id="evname" type="text" placeholder="Name of the event...">
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field" id="f_evstart">
+        <label><span class="req">*</span>Start date</label>
+        <input id="evstart" type="date">
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field" id="f_evend">
+        <label><span class="req">*</span>End date</label>
+        <input id="evend" type="date">
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field">
+        <label>Start time</label>
+        <input id="evstarttime" type="time">
+      </div>
+      <div class="field">
+        <label>End time</label>
+        <input id="evendtime" type="time">
+      </div>
+      <div class="field" id="f_evcat">
+        <label><span class="req">*</span>Event category</label>
+        <select id="evcat">
+          <option value="">— Select —</option>
+          <option value="צדקה / גיוס כספים">Charity / Fundraising</option>
+          <option value="אירוע פרטי">Private event</option>
+          <option value="כנס מקצועי">Professional conference</option>
+          <option value="חגיגה / שמחה">Celebration / Social</option>
+          <option value="כנס / תערוכה">Convention / Exhibition</option>
+          <option value="אירוע דיפלומטי">Diplomatic event</option>
+          <option value="אחר">Other</option>
+        </select>
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field">
+        <label>Event type</label>
+        <select id="evtype">
+          <option value="">— Select —</option>
+          <option value="ארוחה (ערב / צהריים)">Dinner / Lunch</option>
+          <option value="קבלת פנים">Reception</option>
+          <option value="כנס / ישיבה">Conference / Meeting</option>
+          <option value="תהלוכה / מצעד">Procession / Parade</option>
+          <option value="עצרת / הפגנה">Rally / Demonstration</option>
+          <option value="הופעה / מופע">Performance / Show</option>
+          <option value="אחר">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Is this a recurring event?</label>
+        <select id="recurring">
+          <option value="">— Select —</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-title">Event Location</div>
+    <div class="field" id="f_venue">
+      <label><span class="req">*</span>Venue address / Google Maps link</label>
+      <input id="venue" type="text" placeholder="Venue name, street, city — or paste a Google Maps link...">
+      <span class="err-msg">Required field</span>
+    </div>
+
+    <div class="grid2" style="margin-top:12px">
+      <div class="field">
+        <label>Is the event outdoors?</label>
+        <div class="radio-group">
+          <label class="radio-opt" onclick="setRadio('outdoor','כן',this)">
+            <input type="radio" name="outdoor" value="כן"> Yes
+          </label>
+          <label class="radio-opt" onclick="setRadio('outdoor','לא',this)">
+            <input type="radio" name="outdoor" value="לא"> No
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Is the event related to the Jewish community?</label>
+        <div class="radio-group">
+          <label class="radio-opt" onclick="setRadio('jewishcommunity','כן',this)">
+            <input type="radio" name="jewishcommunity" value="כן"> Yes
+          </label>
+          <label class="radio-opt" onclick="setRadio('jewishcommunity','לא',this)">
+            <input type="radio" name="jewishcommunity" value="לא"> No
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Will it take place at a government institution?</label>
+        <div class="radio-group">
+          <label class="radio-opt" onclick="setRadio('govprox','כן',this);addScore('govprox',1)">
+            <input type="radio" name="govprox" value="כן"> Yes
+          </label>
+          <label class="radio-opt" onclick="setRadio('govprox','לא',this);addScore('govprox',0)">
+            <input type="radio" name="govprox" value="לא"> No
+          </label>
+          <label class="radio-opt" onclick="setRadio('govprox','לא יודע',this)">
+            <input type="radio" name="govprox" value="לא יודע"> Unknown
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav">
+    <button class="btn-prev" onclick="prevStep(1)">← Previous</button>
+    <span class="step-ind">Step 2 of 5</span>
+    <button class="btn-next" onclick="nextStep(1)">Next →</button>
+  </div>
+</div>
+
+<!-- ===== STEP 2 — Audience & Publicity ===== -->
+<div id="step2" style="display:none">
+  <div class="card">
+    <div class="section-title">Audience Details</div>
+    <div class="grid2">
+      <div class="field">
+        <label>Entry type</label>
+        <select id="entrytype" onchange="handleEntryType(this.value)">
+          <option value="">— Select —</option>
+          <option value="invite">By invitation only</option>
+          <option value="community">Community</option>
+          <option value="ticketed">Ticketed</option>
+          <option value="open">Open to the public</option>
+          <option value="other">Other</option>
+          <option value="unknown">Unknown</option>
+        </select>
+        <div class="cond" id="cond_entrytype_other">
+          <div class="field">
+            <label>Please specify</label>
+            <input type="text" id="entrytype_other" placeholder="Entry type details...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:12px">
+      <div class="field">
+        <label>Are guests vetted / screened?</label>
+        <div class="radio-group">
+          <label class="radio-opt" onclick="setRadio('vetted','כן',this,'cond_vetted');addScore('notvetting',0)">
+            <input type="radio" name="vetted" value="כן"> Yes
+          </label>
+          <label class="radio-opt" onclick="setRadio('vetted','לא',this,'cond_vetted');addScore('notvetting',1)">
+            <input type="radio" name="vetted" value="לא"> No
+          </label>
+          <label class="radio-opt" onclick="setRadio('vetted','לא יודע',this,'cond_vetted');addScore('notvetting',0)">
+            <input type="radio" name="vetted" value="לא יודע"> Unknown
+          </label>
+        </div>
+        <div class="cond" id="cond_vetted">
+          <div class="field">
+            <label>Describe the vetting method</label>
+            <input type="text" id="vetting_detail" placeholder="Guest lists, ID checks, tickets...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Event Publicity</div>
+    <div class="field">
+      <label>Is the event publicly advertised?</label>
+      <div class="radio-group">
+        <label class="radio-opt" onclick="setRadio('advertised','כן',this,'cond_adv');addScore('advertised',1)">
+          <input type="radio" name="advertised" value="כן"> Yes
+        </label>
+        <label class="radio-opt" onclick="setRadio('advertised','לא',this,'cond_adv');addScore('advertised',0)">
+          <input type="radio" name="advertised" value="לא"> No
+        </label>
+      </div>
+      <div class="cond" id="cond_adv">
+        <div class="field">
+          <label>Advertising channels</label>
+          <div class="cb-wrap">
+            <label class="cb-item"><input type="checkbox" name="advchan" value="social_closed"> Closed social networks</label>
+            <label class="cb-item"><input type="checkbox" name="advchan" value="social_open"> Open social networks</label>
+            <label class="cb-item"><input type="checkbox" name="advchan" value="email"> Email</label>
+            <label class="cb-item"><input type="checkbox" name="advchan" value="press"> Press</label>
+            <label class="cb-item"><input type="checkbox" name="advchan" value="whatsapp"> WhatsApp</label>
+            <label class="cb-item"><input type="checkbox" name="advchan" value="website"> Website</label>
+            <label class="cb-item"><input type="checkbox" name="advchan" value="all"> All of the above</label>
+          </div>
+        </div>
+        <div class="field" style="margin-top:8px">
+          <label>Is the location shown in the advertisement?</label>
+          <div class="radio-group">
+            <label class="radio-opt" onclick="setRadio('advloc','כן',this)">
+              <input type="radio" name="advloc" value="כן"> Yes
+            </label>
+            <label class="radio-opt" onclick="setRadio('advloc','לא',this)">
+              <input type="radio" name="advloc" value="לא"> No
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav">
+    <button class="btn-prev" onclick="prevStep(2)">← Previous</button>
+    <span class="step-ind">Step 3 of 5</span>
+    <button class="btn-next" onclick="nextStep(2)">Next →</button>
+  </div>
+</div>
+
+<!-- ===== STEP 3 — Risks & Security ===== -->
+<div id="step3" style="display:none">
+  <div class="card">
+    <div class="section-title">Persons &amp; Threats</div>
+    <div class="grid2">
+      <div class="field">
+        <label>Will senior / protected persons attend?</label>
+        <div class="radio-group">
+          <label class="radio-opt" onclick="setRadio('vip','כן',this,'cond_vip');addScore('vip',1)">
+            <input type="radio" name="vip" value="כן"> Yes
+          </label>
+          <label class="radio-opt" onclick="setRadio('vip','לא',this,'cond_vip');addScore('vip',0)">
+            <input type="radio" name="vip" value="לא"> No
+          </label>
+          <label class="radio-opt" onclick="setRadio('vip','לא יודע',this,'cond_vip');addScore('vip',0)">
+            <input type="radio" name="vip" value="לא יודע"> Unknown
+          </label>
+        </div>
+        <div class="cond" id="cond_vip">
+          <div class="field">
+            <label>Detail the persons</label>
+            <input type="text" id="vip_detail" placeholder="Names / roles...">
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Are protests / demonstrations expected?</label>
+        <div class="radio-group">
+          <label class="radio-opt" onclick="setRadio('protest','כן',this);addScore('protest',1)">
+            <input type="radio" name="protest" value="כן"> Yes
+          </label>
+          <label class="radio-opt" onclick="setRadio('protest','לא',this);addScore('protest',0)">
+            <input type="radio" name="protest" value="לא"> No
+          </label>
+          <label class="radio-opt" onclick="setRadio('protest','לא ידוע',this)">
+            <input type="radio" name="protest" value="לא ידוע"> Unknown
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:14px">
+      <label>What will your role be at the event?</label>
+      <div class="radio-group">
+        <label class="radio-opt" onclick="setRadio('eventrole','אורח',this,'cond_eventrole','אחר')">
+          <input type="radio" name="eventrole" value="אורח"> Guest
+        </label>
+        <label class="radio-opt" onclick="setRadio('eventrole','דובר',this,'cond_eventrole','אחר')">
+          <input type="radio" name="eventrole" value="דובר"> Speaker
+        </label>
+        <label class="radio-opt" onclick="setRadio('eventrole','מארח',this,'cond_eventrole','אחר')">
+          <input type="radio" name="eventrole" value="מארח"> Host
+        </label>
+        <label class="radio-opt" onclick="setRadio('eventrole','מקבל פרס',this,'cond_eventrole','אחר')">
+          <input type="radio" name="eventrole" value="מקבל פרס"> Award recipient
+        </label>
+        <label class="radio-opt" onclick="setRadio('eventrole','אחר',this,'cond_eventrole','אחר')">
+          <input type="radio" name="eventrole" value="אחר"> Other
+        </label>
+      </div>
+      <div class="cond" id="cond_eventrole">
+        <div class="field" id="f_eventrole_other">
+          <label><span class="req">*</span>Please specify</label>
+          <input type="text" id="eventrole_other" placeholder="Describe your role...">
+          <span class="err-msg">Required field</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Existing Security</div>
+    <div class="field">
+      <label>Existing security measures</label>
+      <div class="cb-wrap">
+        <label class="cb-item"><input type="checkbox" name="security" value="none"> No security</label>
+        <label class="cb-item"><input type="checkbox" name="security" value="venue"> Venue security</label>
+        <label class="cb-item"><input type="checkbox" name="security" value="commercial"> Security company</label>
+        <label class="cb-item"><input type="checkbox" name="security" value="community"> Community security</label>
+        <label class="cb-item"><input type="checkbox" name="security" value="marshalls"> Marshals</label>
+        <label class="cb-item"><input type="checkbox" name="security" value="police"> Approved police presence</label>
+      </div>
+    </div>
+
+    <div class="section-title">Additional Information</div>
+    <div class="field">
+      <label>Any other relevant information</label>
+      <textarea id="extra" rows="3" placeholder="Add any important details..."></textarea>
+    </div>
+  </div>
+  <div class="nav">
+    <button class="btn-prev" onclick="prevStep(3)">← Previous</button>
+    <span class="step-ind">Step 4 of 5</span>
+    <button class="btn-next" onclick="nextStep(3)">Continue to summary →</button>
+  </div>
+</div>
+
+<!-- ===== STEP 4 — Review & Submit ===== -->
+<div id="step4" style="display:none">
+  <div class="card" id="reviewCard"></div>
+  <div class="nav" id="step4Nav">
+    <button class="btn-prev" onclick="prevStep(4)">← Previous</button>
+    <span class="step-ind">Step 5 of 5</span>
+    <button class="btn-next" id="submitBtn" onclick="submitForm()" style="background:#16a34a">Submit form ✓</button>
+  </div>
+  <div class="success" id="successDiv">
+    <div class="success-icon">✓</div>
+    <h2 style="font-size:20px;margin-bottom:8px">Form submitted successfully!</h2>
+    <p style="color:#64748b;font-size:13px;margin-bottom:12px">Your reference number:</p>
+    <div class="ref-box" id="refBox"></div>
+    <p style="font-size:12px;color:#94a3b8;margin-top:10px">Please keep this number for communication with the team.</p>
+    <button onclick="location.reload()" style="margin-top:20px;padding:8px 20px;border:1px solid #e2e8f0;border-radius:8px;background:white;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;color:#64748b">Submit another form</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  if (!FIREBASE_URL || FIREBASE_URL.includes('YOUR-PROJECT')) {
+    document.getElementById('configBanner').classList.add('show');
+  }
+});
+
+function saveToFirebase(ref, data) {
+  return fetch(FIREBASE_URL + '/submissions/' + ref + '.json', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(function(res) {
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  });
+}
+
+var cur = 0;
+var scoreMap = {};
+
+function gv(name) { var r = document.querySelector('input[name="'+name+'"]:checked'); return r ? r.value : ''; }
+function gi(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+function addScore(k, v) { scoreMap[k] = v; }
+function calcScore() { var s = 0; for (var k in scoreMap) s += scoreMap[k]; return Math.min(s, 10); }
+
+function setRadio(name, val, el, condId, triggerVal) {
+  document.querySelectorAll('input[name="'+name+'"]').forEach(function(r) {
+    r.closest('.radio-opt').classList.remove('checked');
+  });
+  if (el) el.classList.add('checked');
+  if (condId) {
+    var c = document.getElementById(condId);
+    if (c) {
+      var trigger = triggerVal !== undefined ? triggerVal : 'כן';
+      c.className = 'cond' + (val === trigger ? ' show' : '');
+    }
+  }
+  var errEl = document.getElementById('err_' + name);
+  if (errEl) errEl.classList.remove('show');
+  var rg = document.getElementById('rg_' + name);
+  if (rg) rg.classList.remove('error');
+}
+
+function handleEntryType(val) {
+  addScore('openentry', val === 'open' ? 1 : 0);
+  var c = document.getElementById('cond_entrytype_other');
+  if (c) c.className = 'cond' + (val === 'other' ? ' show' : '');
+}
+
+function validateStep(s) {
+  var ok = true;
+  var firstErr = null;
+
+  function req(id, fid) {
+    var el = document.getElementById(id);
+    var fw = document.getElementById(fid);
+    if (!fw) return;
+    if (!el || !el.value.trim()) {
+      fw.classList.add('error');
+      ok = false;
+      if (!firstErr) firstErr = fw;
+    } else {
+      fw.classList.remove('error');
+    }
+  }
+
+  function reqRadio(name) {
+    var checked = document.querySelector('input[name="'+name+'"]:checked');
+    var errEl = document.getElementById('err_' + name);
+    var rg = document.getElementById('rg_' + name);
+    if (!checked) {
+      if (errEl) errEl.classList.add('show');
+      if (rg) { rg.classList.add('error'); if (!firstErr) firstErr = rg; }
+      ok = false;
+    } else {
+      if (errEl) errEl.classList.remove('show');
+      if (rg) rg.classList.remove('error');
+    }
+  }
+
+  if (s === 0) {
+    req('personalid', 'f_personalid');
+    req('org', 'f_org');
+    req('fname', 'f_fname');
+    req('lname', 'f_lname');
+    req('phone', 'f_phone');
+    reqRadio('orgknown');
+    if (gv('orgknown') === 'ידוע ומוכר') {
+      req('orgknown_detail', 'f_orgknown_detail');
+    }
+  }
+
+  if (s === 1) {
+    req('evname', 'f_evname');
+    req('evstart', 'f_evstart');
+    req('evend', 'f_evend');
+    req('venue', 'f_venue');
+    var ec = document.getElementById('evcat');
+    var fw = document.getElementById('f_evcat');
+    if (!ec || !ec.value) {
+      fw.classList.add('error');
+      ok = false;
+      if (!firstErr) firstErr = fw;
+    } else {
+      fw.classList.remove('error');
+    }
+  }
+
+  if (s === 3) {
+    if (gv('eventrole') === 'אחר') {
+      req('eventrole_other', 'f_eventrole_other');
+    }
+  }
+
+  if (!ok && firstErr) {
+    firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    firstErr.classList.add('err-shake');
+    setTimeout(function() { firstErr.classList.remove('err-shake'); }, 400);
+  }
+
+  return ok;
+}
+
+function showStep(n) {
+  for (var i = 0; i < 5; i++) {
+    var el = document.getElementById('step' + i);
+    if (el) el.style.display = i === n ? 'block' : 'none';
+    var tb = document.querySelectorAll('.step-btn')[i];
+    if (tb) tb.className = 'step-btn' + (i === n ? ' active' : i < n ? ' done' : '');
+  }
+  if (n === 4) buildReview();
+}
+
+function nextStep(s) {
+  if (!validateStep(s)) return;
+  cur = s + 1;
+  showStep(cur);
+  window.scrollTo(0, 0);
+}
+function prevStep(s) { cur = s - 1; showStep(cur); window.scrollTo(0, 0); }
+function goToStep(n) { if (n <= cur) { cur = n; showStep(cur); } }
+
+function entryLabel() {
+  var v = gi('entrytype');
+  var map = {
+    invite: 'By invitation only', community: 'Community', ticketed: 'Ticketed',
+    open: 'Open to the public', other: gi('entrytype_other') || 'Other', unknown: 'Unknown'
+  };
+  return map[v] || '—';
+}
+
+function recurringLabel() {
+  return { weekly: 'Weekly', monthly: 'Monthly', yearly: 'Yearly', no: 'No' }[gi('recurring')] || '—';
+}
+
+/* Dashboard reads Hebrew labels so we translate Yes/No for display only in the review */
+function yesNoEn(val) {
+  if (val === 'כן') return '<span style="background:#dbeafe;color:#1e40af;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600">Yes</span>';
+  if (val === 'לא') return '<span style="background:#f1f5f9;color:#64748b;padding:2px 9px;border-radius:12px;font-size:11px">No</span>';
+  if (val === 'לא יודע' || val === 'לא ידוע') return '<span style="background:#f1f5f9;color:#64748b;padding:2px 9px;border-radius:12px;font-size:11px">Unknown</span>';
+  return val || '—';
+}
+
+/* Map stored Hebrew role values back to English for the review card */
+function roleLabel(val) {
+  var map = { 'אורח':'Guest','דובר':'Speaker','מארח':'Host','מקבל פרס':'Award recipient','אחר':'Other' };
+  return map[val] || val || '—';
+}
+
+/* Map stored Hebrew orgknown values */
+function orgknownLabel(val) {
+  var map = { 'ידוע ומוכר':'Known & familiar','לא מוכר אישית':'Not personally known' };
+  return map[val] || val || '—';
+}
+
+function row(label, val) {
+  return '<tr><td style="padding:7px 10px;color:#64748b;font-size:12px;width:45%">'+label+'</td><td style="padding:7px 10px;font-size:13px">'+val+'</td></tr>';
+}
+
+function buildReview() {
+  var score = calcScore();
+  var level, lcolor, lbg;
+  if (score <= 3) { level = 'Low'; lcolor = '#15803d'; lbg = '#dcfce7'; }
+  else if (score <= 7) { level = 'Medium'; lcolor = '#92400e'; lbg = '#fef3c7'; }
+  else { level = 'High'; lcolor = '#991b1b'; lbg = '#fee2e2'; }
+  var pct = Math.round(score / 10 * 100);
+  var gfill = score <= 3 ? '#16a34a' : score <= 7 ? '#d97706' : '#dc2626';
+
+  var html = '<div style="padding-bottom:1rem;border-bottom:1px solid #e2e8f0;margin-bottom:1rem">';
+  html += '<div style="font-size:11px;color:#94a3b8;margin-bottom:4px">Automatic risk score</div>';
+  html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">';
+  html += '<span style="font-size:42px;font-weight:700;color:'+lcolor+'">'+score+'</span>';
+  html += '<div><div style="font-size:11px;color:#94a3b8">out of 10</div>';
+  html += '<span style="background:'+lbg+';color:'+lcolor+';padding:3px 14px;border-radius:20px;font-size:13px;font-weight:600">Security level: '+level+'</span></div></div>';
+  html += '<div style="height:8px;background:#e2e8f0;border-radius:20px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+gfill+';border-radius:20px;transition:width .6s"></div></div>';
+  html += '<div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;margin-top:3px"><span>Low</span><span>Medium</span><span>High</span></div></div>';
+
+  html += '<div style="font-size:12px;font-weight:600;color:#0f2744;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Summary</div>';
+  html += '<table style="width:100%;border-collapse:collapse">';
+  html += row('Under the auspices of', gi('org') || '—');
+  html += row('Personal ID', gi('personalid') || '—');
+  html += row('Organiser', orgknownLabel(gv('orgknown')));
+  if (gv('orgknown') === 'ידוע ומוכר') html += row('Organiser detail', gi('orgknown_detail') || '—');
+  html += row('Contact', ((gi('fname') + ' ' + gi('lname')).trim()) || '—');
+  html += row('Event name', gi('evname') || '—');
+  html += row('Date', gi('evstart') || '—');
+  html += row('Venue', gi('venue') || '—');
+  html += row('Jewish community', yesNoEn(gv('jewishcommunity')));
+  html += row('Recurring event', recurringLabel());
+  html += row('Entry type', entryLabel());
+  html += row('Government institution', yesNoEn(gv('govprox')));
+  html += row('Senior persons (VIP)', yesNoEn(gv('vip')));
+  html += row('Protests expected', yesNoEn(gv('protest')));
+  var roleVal = gv('eventrole') === 'אחר' ? (gi('eventrole_other') || 'Other') : roleLabel(gv('eventrole'));
+  html += row('Role at event', roleVal || '—');
+  html += '</table>';
+
+  document.getElementById('reviewCard').innerHTML = html;
+  document.getElementById('submitBtn').style.display = 'inline-block';
+  document.getElementById('successDiv').classList.remove('show');
+  document.getElementById('step4Nav').style.display = 'flex';
+}
+
+function submitForm() {
+  var ref = 'SEC-' + Date.now().toString(36).toUpperCase().slice(-8);
+  var score = calcScore();
+  /* Store Hebrew level so dashboard badge renders correctly */
+  var level = score <= 3 ? 'נמוכה' : score <= 7 ? 'בינונית' : 'גבוהה';
+
+  var data = {
+    ref: ref,
+    timestamp: new Date().toISOString(),
+    status: 'new',
+    score: score,
+    level: level,
+    org: gi('org'),
+    personalid: gi('personalid'),
+    invitelink: gi('invitelink'),
+    orgknown: gv('orgknown'),
+    orgknown_detail: gi('orgknown_detail'),
+    fname: gi('fname'), lname: gi('lname'),
+    email: gi('email'), phone: gi('phone'), role: gi('role'),
+    evname: gi('evname'), evstart: gi('evstart'), evend: gi('evend'),
+    evstarttime: gi('evstarttime'), evendtime: gi('evendtime'),
+    evcat: gi('evcat'), evtype: gi('evtype'), venue: gi('venue'),
+    jewishcommunity: gv('jewishcommunity'),
+    recurring: gi('recurring'),
+    outdoor: gv('outdoor'),
+    govprox: gv('govprox'),
+    entrytype: gi('entrytype'), entrytype_other: gi('entrytype_other'),
+    vetted: gv('vetted'), vetting_detail: gi('vetting_detail'),
+    advertised: gv('advertised'), advloc: gv('advloc'),
+    vip: gv('vip'), vip_detail: gi('vip_detail'),
+    protest: gv('protest'),
+    eventrole: gv('eventrole'), eventrole_other: gi('eventrole_other'),
+    extra: gi('extra'),
+    advchan: Array.from(document.querySelectorAll('input[name="advchan"]:checked')).map(function(c) { return c.value; }),
+    security: Array.from(document.querySelectorAll('input[name="security"]:checked')).map(function(c) { return c.value; })
+  };
+
+  if (!FIREBASE_URL || FIREBASE_URL.includes('YOUR-PROJECT')) {
+    var existing = JSON.parse(localStorage.getItem('securitySubmissions') || '[]');
+    existing.push(data);
+    localStorage.setItem('securitySubmissions', JSON.stringify(existing));
+    showSuccess(ref);
+    return;
+  }
+
+  document.getElementById('overlay').classList.add('show');
+
+  saveToFirebase(ref, data)
+    .then(function() {
+      document.getElementById('overlay').classList.remove('show');
+      showSuccess(ref);
+    })
+    .catch(function(err) {
+      document.getElementById('overlay').classList.remove('show');
+      var existing = JSON.parse(localStorage.getItem('securitySubmissions') || '[]');
+      existing.push(data);
+      localStorage.setItem('securitySubmissions', JSON.stringify(existing));
+      console.error('Firebase error:', err);
+      alert('⚠️ Firebase connection error.\nData saved in browser as backup.\n\nError: ' + err.message);
+      showSuccess(ref);
+    });
+}
+
+function showSuccess(ref) {
+  document.getElementById('refBox').textContent = ref;
+  document.getElementById('reviewCard').style.display = 'none';
+  document.getElementById('step4Nav').style.display = 'none';
+  document.getElementById('successDiv').classList.add('show');
+}
+</script>
+</body>
+</html>

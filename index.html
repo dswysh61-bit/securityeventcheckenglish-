@@ -85,7 +85,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
 <div class="overlay" id="overlay"><div class="spinner"></div><span>Submitting form...</span></div>
 
-<div class="top-strip">üîí Security Risk Assessment System ‚Äî Secure Form</div>
+<div class="top-strip">🔒 Security Risk Assessment System — Secure Form</div>
 
 <div class="page-header">
   <h1 id="pageTitleH">Security Assessment Form</h1>
@@ -97,14 +97,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   <div class="tc-hint">What would you like to fill in?</div>
   <div class="tc-grid">
     <div class="tc-card" onclick="chooseType('event')">
-      <div class="ic">üìÖ</div>
+      <div class="ic">📅</div>
       <h3>Event</h3>
-      <p>Full security assessment form ‚Äî organisation, event details, audience, risks &amp; security.</p>
+      <p>Full security assessment form — organisation, event details, audience, risks &amp; security.</p>
     </div>
     <div class="tc-card" onclick="chooseType('meeting')">
-      <div class="ic">ü§ù</div>
+      <div class="ic">🤝</div>
       <h3>Meeting</h3>
-      <p>Short form for a personal meeting ‚Äî person details, acquaintance level, location and notes.</p>
+      <p>Short form for a personal meeting — person details, acquaintance level, location and notes.</p>
     </div>
   </div>
 </div>
@@ -115,21 +115,21 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <div id="eventFlow" style="display:none">
 
 <div class="steps-bar">
-  <button class="step-btn active" onclick="goToStep(0)">1 ‚Äî Organisation</button>
-  <button class="step-btn" onclick="goToStep(1)">2 ‚Äî Event Details</button>
-  <button class="step-btn" onclick="goToStep(2)">3 ‚Äî Audience &amp; Publicity</button>
-  <button class="step-btn" onclick="goToStep(3)">4 ‚Äî Risks &amp; Security</button>
-  <button class="step-btn" onclick="goToStep(4)">5 ‚Äî Submit</button>
+  <button class="step-btn active" onclick="goToStep(0)">1 — Organisation</button>
+  <button class="step-btn" onclick="goToStep(1)">2 — Event Details</button>
+  <button class="step-btn" onclick="goToStep(2)">3 — Audience &amp; Publicity</button>
+  <button class="step-btn" onclick="goToStep(3)">4 — Risks &amp; Security</button>
+  <button class="step-btn" onclick="goToStep(4)">5 — Submit</button>
 </div>
 
 <div class="container">
 
 <div class="fb-config-banner" id="configBanner">
-  ‚ö†Ô∏è <strong>Firebase is not configured yet.</strong> The form will work but data will not be saved to the server.<br>
+  ⚠️ <strong>Firebase is not configured yet.</strong> The form will work but data will not be saved to the server.<br>
   To connect: edit the <code>FIREBASE_URL</code> variable at the top of the file.
 </div>
 
-<!-- ===== STEP 0 ‚Äî Organisation ===== -->
+<!-- ===== STEP 0 — Organisation ===== -->
 <div id="step0">
   <div class="card">
     <div class="section-title">Organisation Details</div>
@@ -153,17 +153,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="field" style="margin-top:14px" id="f_orgknown_radio">
       <label>Is the organiser known / familiar, or unknown personally? <span class="req">*</span></label>
       <div class="radio-group" id="rg_orgknown">
-        <label class="radio-opt" onclick="setRadio('orgknown','◊ô◊ì◊ï◊¢ ◊ï◊û◊ï◊õ◊®',this,'cond_orgknown','◊ô◊ì◊ï◊¢ ◊ï◊û◊ï◊õ◊®')">
-          <input type="radio" name="orgknown" value="◊ô◊ì◊ï◊¢ ◊ï◊û◊ï◊õ◊®"> Known &amp; familiar
+        <label class="radio-opt" onclick="setRadio('orgknown','ידוע ומוכר',this,'cond_orgknown','ידוע ומוכר')">
+          <input type="radio" name="orgknown" value="ידוע ומוכר"> Known &amp; familiar
         </label>
-        <label class="radio-opt" onclick="setRadio('orgknown','◊ú◊ê ◊û◊ï◊õ◊® ◊ê◊ô◊©◊ô◊™',this,'cond_orgknown','◊ô◊ì◊ï◊¢ ◊ï◊û◊ï◊õ◊®')">
-          <input type="radio" name="orgknown" value="◊ú◊ê ◊û◊ï◊õ◊® ◊ê◊ô◊©◊ô◊™"> Not personally known
+        <label class="radio-opt" onclick="setRadio('orgknown','לא מוכר אישית',this,'cond_orgknown','ידוע ומוכר')">
+          <input type="radio" name="orgknown" value="לא מוכר אישית"> Not personally known
         </label>
       </div>
       <span class="radio-err" id="err_orgknown">Please select an option</span>
       <div class="cond" id="cond_orgknown">
         <div class="field" id="f_orgknown_detail">
-          <label><span class="req">*</span>Detail ‚Äî how is the organiser known?</label>
+          <label><span class="req">*</span>Detail — how is the organiser known?</label>
           <input type="text" id="orgknown_detail" placeholder="How the organiser is known, from which context...">
           <span class="err-msg">Required when organiser is known &amp; familiar</span>
         </div>
@@ -198,13 +198,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     </div>
   </div>
   <div class="nav">
-    <button class="btn-prev" onclick="backToChooser()">‚Üê Back to selection</button>
+    <button class="btn-prev" onclick="backToChooser()">← Back to selection</button>
     <span class="step-ind">Step 1 of 5</span>
-    <button class="btn-next" onclick="nextStep(0)">Next ‚Üí</button>
+    <button class="btn-next" onclick="nextStep(0)">Next →</button>
   </div>
 </div>
 
-<!-- ===== STEP 1 ‚Äî Event Details ===== -->
+<!-- ===== STEP 1 — Event Details ===== -->
 <div id="step1" style="display:none">
   <div class="card">
     <div class="section-title">Event Details</div>
@@ -235,34 +235,34 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="field" id="f_evcat">
         <label><span class="req">*</span>Event category</label>
         <select id="evcat">
-          <option value="">‚Äî Select ‚Äî</option>
-          <option value="◊¶◊ì◊ß◊î / ◊í◊ô◊ï◊° ◊õ◊°◊§◊ô◊ù">Charity / Fundraising</option>
-          <option value="◊ê◊ô◊®◊ï◊¢ ◊§◊®◊ò◊ô">Private event</option>
-          <option value="◊õ◊†◊° ◊û◊ß◊¶◊ï◊¢◊ô">Professional conference</option>
-          <option value="◊ó◊í◊ô◊í◊î / ◊©◊û◊ó◊î">Celebration / Social</option>
-          <option value="◊õ◊†◊° / ◊™◊¢◊®◊ï◊õ◊î">Convention / Exhibition</option>
-          <option value="◊ê◊ô◊®◊ï◊¢ ◊ì◊ô◊§◊ú◊ï◊û◊ò◊ô">Diplomatic event</option>
-          <option value="◊ê◊ó◊®">Other</option>
+          <option value="">— Select —</option>
+          <option value="צדקה / גיוס כספים">Charity / Fundraising</option>
+          <option value="אירוע פרטי">Private event</option>
+          <option value="כנס מקצועי">Professional conference</option>
+          <option value="חגיגה / שמחה">Celebration / Social</option>
+          <option value="כנס / תערוכה">Convention / Exhibition</option>
+          <option value="אירוע דיפלומטי">Diplomatic event</option>
+          <option value="אחר">Other</option>
         </select>
         <span class="err-msg">Required field</span>
       </div>
       <div class="field">
         <label>Event type</label>
         <select id="evtype">
-          <option value="">‚Äî Select ‚Äî</option>
-          <option value="◊ê◊®◊ï◊ó◊î (◊¢◊®◊ë / ◊¶◊î◊®◊ô◊ô◊ù)">Dinner / Lunch</option>
-          <option value="◊ß◊ë◊ú◊™ ◊§◊†◊ô◊ù">Reception</option>
-          <option value="◊õ◊†◊° / ◊ô◊©◊ô◊ë◊î">Conference / Meeting</option>
-          <option value="◊™◊î◊ú◊ï◊õ◊î / ◊û◊¶◊¢◊ì">Procession / Parade</option>
-          <option value="◊¢◊¶◊®◊™ / ◊î◊§◊í◊†◊î">Rally / Demonstration</option>
-          <option value="◊î◊ï◊§◊¢◊î / ◊û◊ï◊§◊¢">Performance / Show</option>
-          <option value="◊ê◊ó◊®">Other</option>
+          <option value="">— Select —</option>
+          <option value="ארוחה (ערב / צהריים)">Dinner / Lunch</option>
+          <option value="קבלת פנים">Reception</option>
+          <option value="כנס / ישיבה">Conference / Meeting</option>
+          <option value="תהלוכה / מצעד">Procession / Parade</option>
+          <option value="עצרת / הפגנה">Rally / Demonstration</option>
+          <option value="הופעה / מופע">Performance / Show</option>
+          <option value="אחר">Other</option>
         </select>
       </div>
       <div class="field">
         <label>Is this a recurring event?</label>
         <select id="recurring">
-          <option value="">‚Äî Select ‚Äî</option>
+          <option value="">— Select —</option>
           <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
           <option value="yearly">Yearly</option>
@@ -274,7 +274,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="section-title">Event Location</div>
     <div class="field" id="f_venue">
       <label><span class="req">*</span>Venue address / Google Maps link</label>
-      <input id="venue" type="text" placeholder="Venue name, street, city ‚Äî or paste a Google Maps link...">
+      <input id="venue" type="text" placeholder="Venue name, street, city — or paste a Google Maps link...">
       <span class="err-msg">Required field</span>
     </div>
 
@@ -282,49 +282,49 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="field">
         <label>Is the event outdoors?</label>
         <div class="radio-group">
-          <label class="radio-opt" onclick="setRadio('outdoor','◊õ◊ü',this)">
-            <input type="radio" name="outdoor" value="◊õ◊ü"> Yes
+          <label class="radio-opt" onclick="setRadio('outdoor','כן',this)">
+            <input type="radio" name="outdoor" value="כן"> Yes
           </label>
-          <label class="radio-opt" onclick="setRadio('outdoor','◊ú◊ê',this)">
-            <input type="radio" name="outdoor" value="◊ú◊ê"> No
+          <label class="radio-opt" onclick="setRadio('outdoor','לא',this)">
+            <input type="radio" name="outdoor" value="לא"> No
           </label>
         </div>
       </div>
       <div class="field">
         <label>Is the event related to the Jewish community?</label>
         <div class="radio-group">
-          <label class="radio-opt" onclick="setRadio('jewishcommunity','◊õ◊ü',this)">
-            <input type="radio" name="jewishcommunity" value="◊õ◊ü"> Yes
+          <label class="radio-opt" onclick="setRadio('jewishcommunity','כן',this)">
+            <input type="radio" name="jewishcommunity" value="כן"> Yes
           </label>
-          <label class="radio-opt" onclick="setRadio('jewishcommunity','◊ú◊ê',this)">
-            <input type="radio" name="jewishcommunity" value="◊ú◊ê"> No
+          <label class="radio-opt" onclick="setRadio('jewishcommunity','לא',this)">
+            <input type="radio" name="jewishcommunity" value="לא"> No
           </label>
         </div>
       </div>
       <div class="field">
         <label>Will it take place at a government institution?</label>
         <div class="radio-group">
-          <label class="radio-opt" onclick="setRadio('govprox','◊õ◊ü',this);addScore('govprox',1)">
-            <input type="radio" name="govprox" value="◊õ◊ü"> Yes
+          <label class="radio-opt" onclick="setRadio('govprox','כן',this);addScore('govprox',1)">
+            <input type="radio" name="govprox" value="כן"> Yes
           </label>
-          <label class="radio-opt" onclick="setRadio('govprox','◊ú◊ê',this);addScore('govprox',0)">
-            <input type="radio" name="govprox" value="◊ú◊ê"> No
+          <label class="radio-opt" onclick="setRadio('govprox','לא',this);addScore('govprox',0)">
+            <input type="radio" name="govprox" value="לא"> No
           </label>
-          <label class="radio-opt" onclick="setRadio('govprox','◊ú◊ê ◊ô◊ï◊ì◊¢',this)">
-            <input type="radio" name="govprox" value="◊ú◊ê ◊ô◊ï◊ì◊¢"> Unknown
+          <label class="radio-opt" onclick="setRadio('govprox','לא יודע',this)">
+            <input type="radio" name="govprox" value="לא יודע"> Unknown
           </label>
         </div>
       </div>
     </div>
   </div>
   <div class="nav">
-    <button class="btn-prev" onclick="prevStep(1)">‚Üê Previous</button>
+    <button class="btn-prev" onclick="prevStep(1)">← Previous</button>
     <span class="step-ind">Step 2 of 5</span>
-    <button class="btn-next" onclick="nextStep(1)">Next ‚Üí</button>
+    <button class="btn-next" onclick="nextStep(1)">Next →</button>
   </div>
 </div>
 
-<!-- ===== STEP 2 ‚Äî Audience & Publicity ===== -->
+<!-- ===== STEP 2 — Audience & Publicity ===== -->
 <div id="step2" style="display:none">
   <div class="card">
     <div class="section-title">Audience Details</div>
@@ -332,7 +332,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="field">
         <label>Entry type</label>
         <select id="entrytype" onchange="handleEntryType(this.value)">
-          <option value="">‚Äî Select ‚Äî</option>
+          <option value="">— Select —</option>
           <option value="invite">By invitation only</option>
           <option value="community">Community</option>
           <option value="ticketed">Ticketed</option>
@@ -353,14 +353,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="field">
         <label>Are guests vetted / screened?</label>
         <div class="radio-group">
-          <label class="radio-opt" onclick="setRadio('vetted','◊õ◊ü',this,'cond_vetted');addScore('notvetting',0)">
-            <input type="radio" name="vetted" value="◊õ◊ü"> Yes
+          <label class="radio-opt" onclick="setRadio('vetted','כן',this,'cond_vetted');addScore('notvetting',0)">
+            <input type="radio" name="vetted" value="כן"> Yes
           </label>
-          <label class="radio-opt" onclick="setRadio('vetted','◊ú◊ê',this,'cond_vetted');addScore('notvetting',1)">
-            <input type="radio" name="vetted" value="◊ú◊ê"> No
+          <label class="radio-opt" onclick="setRadio('vetted','לא',this,'cond_vetted');addScore('notvetting',1)">
+            <input type="radio" name="vetted" value="לא"> No
           </label>
-          <label class="radio-opt" onclick="setRadio('vetted','◊ú◊ê ◊ô◊ï◊ì◊¢',this,'cond_vetted');addScore('notvetting',0)">
-            <input type="radio" name="vetted" value="◊ú◊ê ◊ô◊ï◊ì◊¢"> Unknown
+          <label class="radio-opt" onclick="setRadio('vetted','לא יודע',this,'cond_vetted');addScore('notvetting',0)">
+            <input type="radio" name="vetted" value="לא יודע"> Unknown
           </label>
         </div>
         <div class="cond" id="cond_vetted">
@@ -376,11 +376,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="field">
       <label>Is the event publicly advertised?</label>
       <div class="radio-group">
-        <label class="radio-opt" onclick="setRadio('advertised','◊õ◊ü',this,'cond_adv');addScore('advertised',1)">
-          <input type="radio" name="advertised" value="◊õ◊ü"> Yes
+        <label class="radio-opt" onclick="setRadio('advertised','כן',this,'cond_adv');addScore('advertised',1)">
+          <input type="radio" name="advertised" value="כן"> Yes
         </label>
-        <label class="radio-opt" onclick="setRadio('advertised','◊ú◊ê',this,'cond_adv');addScore('advertised',0)">
-          <input type="radio" name="advertised" value="◊ú◊ê"> No
+        <label class="radio-opt" onclick="setRadio('advertised','לא',this,'cond_adv');addScore('advertised',0)">
+          <input type="radio" name="advertised" value="לא"> No
         </label>
       </div>
       <div class="cond" id="cond_adv">
@@ -399,11 +399,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <div class="field" style="margin-top:8px">
           <label>Is the location shown in the advertisement?</label>
           <div class="radio-group">
-            <label class="radio-opt" onclick="setRadio('advloc','◊õ◊ü',this)">
-              <input type="radio" name="advloc" value="◊õ◊ü"> Yes
+            <label class="radio-opt" onclick="setRadio('advloc','כן',this)">
+              <input type="radio" name="advloc" value="כן"> Yes
             </label>
-            <label class="radio-opt" onclick="setRadio('advloc','◊ú◊ê',this)">
-              <input type="radio" name="advloc" value="◊ú◊ê"> No
+            <label class="radio-opt" onclick="setRadio('advloc','לא',this)">
+              <input type="radio" name="advloc" value="לא"> No
             </label>
           </div>
         </div>
@@ -411,13 +411,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     </div>
   </div>
   <div class="nav">
-    <button class="btn-prev" onclick="prevStep(2)">‚Üê Previous</button>
+    <button class="btn-prev" onclick="prevStep(2)">← Previous</button>
     <span class="step-ind">Step 3 of 5</span>
-    <button class="btn-next" onclick="nextStep(2)">Next ‚Üí</button>
+    <button class="btn-next" onclick="nextStep(2)">Next →</button>
   </div>
 </div>
 
-<!-- ===== STEP 3 ‚Äî Risks & Security ===== -->
+<!-- ===== STEP 3 — Risks & Security ===== -->
 <div id="step3" style="display:none">
   <div class="card">
     <div class="section-title">Persons &amp; Threats</div>
@@ -425,14 +425,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="field">
         <label>Will senior / protected persons attend?</label>
         <div class="radio-group">
-          <label class="radio-opt" onclick="setRadio('vip','◊õ◊ü',this,'cond_vip');addScore('vip',1)">
-            <input type="radio" name="vip" value="◊õ◊ü"> Yes
+          <label class="radio-opt" onclick="setRadio('vip','כן',this,'cond_vip');addScore('vip',1)">
+            <input type="radio" name="vip" value="כן"> Yes
           </label>
-          <label class="radio-opt" onclick="setRadio('vip','◊ú◊ê',this,'cond_vip');addScore('vip',0)">
-            <input type="radio" name="vip" value="◊ú◊ê"> No
+          <label class="radio-opt" onclick="setRadio('vip','לא',this,'cond_vip');addScore('vip',0)">
+            <input type="radio" name="vip" value="לא"> No
           </label>
-          <label class="radio-opt" onclick="setRadio('vip','◊ú◊ê ◊ô◊ï◊ì◊¢',this,'cond_vip');addScore('vip',0)">
-            <input type="radio" name="vip" value="◊ú◊ê ◊ô◊ï◊ì◊¢"> Unknown
+          <label class="radio-opt" onclick="setRadio('vip','לא יודע',this,'cond_vip');addScore('vip',0)">
+            <input type="radio" name="vip" value="לא יודע"> Unknown
           </label>
         </div>
         <div class="cond" id="cond_vip">
@@ -445,14 +445,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="field">
         <label>Are protests / demonstrations expected?</label>
         <div class="radio-group">
-          <label class="radio-opt" onclick="setRadio('protest','◊õ◊ü',this);addScore('protest',1)">
-            <input type="radio" name="protest" value="◊õ◊ü"> Yes
+          <label class="radio-opt" onclick="setRadio('protest','כן',this);addScore('protest',1)">
+            <input type="radio" name="protest" value="כן"> Yes
           </label>
-          <label class="radio-opt" onclick="setRadio('protest','◊ú◊ê',this);addScore('protest',0)">
-            <input type="radio" name="protest" value="◊ú◊ê"> No
+          <label class="radio-opt" onclick="setRadio('protest','לא',this);addScore('protest',0)">
+            <input type="radio" name="protest" value="לא"> No
           </label>
-          <label class="radio-opt" onclick="setRadio('protest','◊ú◊ê ◊ô◊ì◊ï◊¢',this)">
-            <input type="radio" name="protest" value="◊ú◊ê ◊ô◊ì◊ï◊¢"> Unknown
+          <label class="radio-opt" onclick="setRadio('protest','לא ידוע',this)">
+            <input type="radio" name="protest" value="לא ידוע"> Unknown
           </label>
         </div>
       </div>
@@ -461,20 +461,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="field" style="margin-top:14px">
       <label>What will your role be at the event?</label>
       <div class="radio-group">
-        <label class="radio-opt" onclick="setRadio('eventrole','◊ê◊ï◊®◊ó',this,'cond_eventrole','◊ê◊ó◊®')">
-          <input type="radio" name="eventrole" value="◊ê◊ï◊®◊ó"> Guest
+        <label class="radio-opt" onclick="setRadio('eventrole','אורח',this,'cond_eventrole','אחר')">
+          <input type="radio" name="eventrole" value="אורח"> Guest
         </label>
-        <label class="radio-opt" onclick="setRadio('eventrole','◊ì◊ï◊ë◊®',this,'cond_eventrole','◊ê◊ó◊®')">
-          <input type="radio" name="eventrole" value="◊ì◊ï◊ë◊®"> Speaker
+        <label class="radio-opt" onclick="setRadio('eventrole','דובר',this,'cond_eventrole','אחר')">
+          <input type="radio" name="eventrole" value="דובר"> Speaker
         </label>
-        <label class="radio-opt" onclick="setRadio('eventrole','◊û◊ê◊®◊ó',this,'cond_eventrole','◊ê◊ó◊®')">
-          <input type="radio" name="eventrole" value="◊û◊ê◊®◊ó"> Host
+        <label class="radio-opt" onclick="setRadio('eventrole','מארח',this,'cond_eventrole','אחר')">
+          <input type="radio" name="eventrole" value="מארח"> Host
         </label>
-        <label class="radio-opt" onclick="setRadio('eventrole','◊û◊ß◊ë◊ú ◊§◊®◊°',this,'cond_eventrole','◊ê◊ó◊®')">
-          <input type="radio" name="eventrole" value="◊û◊ß◊ë◊ú ◊§◊®◊°"> Award recipient
+        <label class="radio-opt" onclick="setRadio('eventrole','מקבל פרס',this,'cond_eventrole','אחר')">
+          <input type="radio" name="eventrole" value="מקבל פרס"> Award recipient
         </label>
-        <label class="radio-opt" onclick="setRadio('eventrole','◊ê◊ó◊®',this,'cond_eventrole','◊ê◊ó◊®')">
-          <input type="radio" name="eventrole" value="◊ê◊ó◊®"> Other
+        <label class="radio-opt" onclick="setRadio('eventrole','אחר',this,'cond_eventrole','אחר')">
+          <input type="radio" name="eventrole" value="אחר"> Other
         </label>
       </div>
       <div class="cond" id="cond_eventrole">
@@ -506,22 +506,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     </div>
   </div>
   <div class="nav">
-    <button class="btn-prev" onclick="prevStep(3)">‚Üê Previous</button>
+    <button class="btn-prev" onclick="prevStep(3)">← Previous</button>
     <span class="step-ind">Step 4 of 5</span>
-    <button class="btn-next" onclick="nextStep(3)">Continue to summary ‚Üí</button>
+    <button class="btn-next" onclick="nextStep(3)">Continue to summary →</button>
   </div>
 </div>
 
-<!-- ===== STEP 4 ‚Äî Review & Submit ===== -->
+<!-- ===== STEP 4 — Review & Submit ===== -->
 <div id="step4" style="display:none">
   <div class="card" id="reviewCard"></div>
   <div class="nav" id="step4Nav">
-    <button class="btn-prev" onclick="prevStep(4)">‚Üê Previous</button>
+    <button class="btn-prev" onclick="prevStep(4)">← Previous</button>
     <span class="step-ind">Step 5 of 5</span>
-    <button class="btn-next" id="submitBtn" onclick="submitForm()" style="background:#16a34a">Submit form ‚úì</button>
+    <button class="btn-next" id="submitBtn" onclick="submitForm()" style="background:#16a34a">Submit form ✓</button>
   </div>
   <div class="success" id="successDiv">
-    <div class="success-icon">‚úì</div>
+    <div class="success-icon">✓</div>
     <h2 style="font-size:20px;margin-bottom:8px">Form submitted successfully!</h2>
     <p style="color:#64748b;font-size:13px;margin-bottom:12px">Your reference number:</p>
     <div class="ref-box" id="refBox"></div>
@@ -561,14 +561,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="field" style="margin-top:14px" id="mf_acq_radio">
         <label>Acquaintance level <span class="req">*</span></label>
         <div class="radio-group" id="rg_macq">
-          <label class="radio-opt" onclick="setRadio('macq','◊î◊ô◊õ◊®◊ï◊™ ◊§◊í◊ô◊©◊î ◊®◊ê◊©◊ï◊†◊î ◊¢◊ì ◊©◊ú◊ô◊©◊ô◊™',this,'cond_macq','◊û◊ï◊õ◊® ◊ï◊û◊î◊ô◊û◊ü ◊¢◊ú ◊ô◊ì◊ô')">
-            <input type="radio" name="macq" value="◊î◊ô◊õ◊®◊ï◊™ ◊§◊í◊ô◊©◊î ◊®◊ê◊©◊ï◊†◊î ◊¢◊ì ◊©◊ú◊ô◊©◊ô◊™"> First‚Äìthird meeting
+          <label class="radio-opt" onclick="setRadio('macq','היכרות פגישה ראשונה עד שלישית',this,'cond_macq','מוכר ומהימן על ידי')">
+            <input type="radio" name="macq" value="היכרות פגישה ראשונה עד שלישית"> First–third meeting
           </label>
-          <label class="radio-opt" onclick="setRadio('macq','◊†◊§◊í◊©◊†◊ï ◊ë◊¢◊ë◊®',this,'cond_macq','◊û◊ï◊õ◊® ◊ï◊û◊î◊ô◊û◊ü ◊¢◊ú ◊ô◊ì◊ô')">
-            <input type="radio" name="macq" value="◊†◊§◊í◊©◊†◊ï ◊ë◊¢◊ë◊®"> Met before
+          <label class="radio-opt" onclick="setRadio('macq','נפגשנו בעבר',this,'cond_macq','מוכר ומהימן על ידי')">
+            <input type="radio" name="macq" value="נפגשנו בעבר"> Met before
           </label>
-          <label class="radio-opt" onclick="setRadio('macq','◊û◊ï◊õ◊® ◊ï◊û◊î◊ô◊û◊ü ◊¢◊ú ◊ô◊ì◊ô',this,'cond_macq','◊û◊ï◊õ◊® ◊ï◊û◊î◊ô◊û◊ü ◊¢◊ú ◊ô◊ì◊ô')">
-            <input type="radio" name="macq" value="◊û◊ï◊õ◊® ◊ï◊û◊î◊ô◊û◊ü ◊¢◊ú ◊ô◊ì◊ô"> Known &amp; trusted by
+          <label class="radio-opt" onclick="setRadio('macq','מוכר ומהימן על ידי',this,'cond_macq','מוכר ומהימן על ידי')">
+            <input type="radio" name="macq" value="מוכר ומהימן על ידי"> Known &amp; trusted by
           </label>
         </div>
         <span class="radio-err" id="err_macq">Please select an option</span>
@@ -583,27 +583,27 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
       <div class="field" style="margin-top:14px" id="mf_address">
         <label><span class="req">*</span>Meeting address</label>
-        <input id="m_address" type="text" placeholder="Enter full address ‚Äî street, number, city...">
+        <input id="m_address" type="text" placeholder="Enter full address — street, number, city...">
         <span class="err-msg">Required field</span>
       </div>
 
       <div class="field" style="margin-top:14px" id="mf_loc_radio">
         <label>Meeting location <span class="req">*</span></label>
         <div class="radio-group" id="rg_mloc">
-          <label class="radio-opt" onclick="setRadio('mloc','◊û◊©◊®◊ì◊ô◊ù',this,'cond_mloc','◊ê◊ó◊®')">
-            <input type="radio" name="mloc" value="◊û◊©◊®◊ì◊ô◊ù"> Offices
+          <label class="radio-opt" onclick="setRadio('mloc','משרדים',this,'cond_mloc','אחר')">
+            <input type="radio" name="mloc" value="משרדים"> Offices
           </label>
-          <label class="radio-opt" onclick="setRadio('mloc','◊û◊°◊¢◊ì◊î',this,'cond_mloc','◊ê◊ó◊®')">
-            <input type="radio" name="mloc" value="◊û◊°◊¢◊ì◊î"> Restaurant
+          <label class="radio-opt" onclick="setRadio('mloc','מסעדה',this,'cond_mloc','אחר')">
+            <input type="radio" name="mloc" value="מסעדה"> Restaurant
           </label>
-          <label class="radio-opt" onclick="setRadio('mloc','◊ë◊ô◊™ ◊ß◊§◊î',this,'cond_mloc','◊ê◊ó◊®')">
-            <input type="radio" name="mloc" value="◊ë◊ô◊™ ◊ß◊§◊î"> Caf√©
+          <label class="radio-opt" onclick="setRadio('mloc','בית קפה',this,'cond_mloc','אחר')">
+            <input type="radio" name="mloc" value="בית קפה"> Café
           </label>
-          <label class="radio-opt" onclick="setRadio('mloc','◊û◊ï◊°◊ì ◊û◊û◊©◊ú◊™◊ô',this,'cond_mloc','◊ê◊ó◊®')">
-            <input type="radio" name="mloc" value="◊û◊ï◊°◊ì ◊û◊û◊©◊ú◊™◊ô"> Government institution
+          <label class="radio-opt" onclick="setRadio('mloc','מוסד ממשלתי',this,'cond_mloc','אחר')">
+            <input type="radio" name="mloc" value="מוסד ממשלתי"> Government institution
           </label>
-          <label class="radio-opt" onclick="setRadio('mloc','◊ê◊ó◊®',this,'cond_mloc','◊ê◊ó◊®')">
-            <input type="radio" name="mloc" value="◊ê◊ó◊®"> Other
+          <label class="radio-opt" onclick="setRadio('mloc','אחר',this,'cond_mloc','אחר')">
+            <input type="radio" name="mloc" value="אחר"> Other
           </label>
         </div>
         <span class="radio-err" id="err_mloc">Please select an option</span>
@@ -623,12 +623,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       </div>
     </div>
     <div class="nav" id="meetingNav">
-      <button class="btn-prev" onclick="backToChooser()">‚Üê Back to selection</button>
+      <button class="btn-prev" onclick="backToChooser()">← Back to selection</button>
       <span class="step-ind">Meeting form</span>
-      <button class="btn-next" id="mSubmitBtn" onclick="submitMeeting()" style="background:#16a34a">Submit form ‚úì</button>
+      <button class="btn-next" id="mSubmitBtn" onclick="submitMeeting()" style="background:#16a34a">Submit form ✓</button>
     </div>
     <div class="success" id="mSuccessDiv">
-      <div class="success-icon">‚úì</div>
+      <div class="success-icon">✓</div>
       <h2 style="font-size:20px;margin-bottom:8px">Form submitted successfully!</h2>
       <p style="color:#64748b;font-size:13px;margin-bottom:12px">Your reference number:</p>
       <div class="ref-box" id="mRefBox"></div>
@@ -698,7 +698,7 @@ function setRadio(name, val, el, condId, triggerVal) {
   if (condId) {
     var c = document.getElementById(condId);
     if (c) {
-      var trigger = triggerVal !== undefined ? triggerVal : '◊õ◊ü';
+      var trigger = triggerVal !== undefined ? triggerVal : 'כן';
       c.className = 'cond' + (val === trigger ? ' show' : '');
     }
   }
@@ -752,7 +752,7 @@ function validateStep(s) {
     req('lname', 'f_lname');
     req('phone', 'f_phone');
     reqRadio('orgknown');
-    if (gv('orgknown') === '◊ô◊ì◊ï◊¢ ◊ï◊û◊ï◊õ◊®') {
+    if (gv('orgknown') === 'ידוע ומוכר') {
       req('orgknown_detail', 'f_orgknown_detail');
     }
   }
@@ -774,7 +774,7 @@ function validateStep(s) {
   }
 
   if (s === 3) {
-    if (gv('eventrole') === '◊ê◊ó◊®') {
+    if (gv('eventrole') === 'אחר') {
       req('eventrole_other', 'f_eventrole_other');
     }
   }
@@ -813,31 +813,31 @@ function entryLabel() {
     invite: 'By invitation only', community: 'Community', ticketed: 'Ticketed',
     open: 'Open to the public', other: gi('entrytype_other') || 'Other', unknown: 'Unknown'
   };
-  return map[v] || '‚Äî';
+  return map[v] || '—';
 }
 
 function recurringLabel() {
-  return { weekly: 'Weekly', monthly: 'Monthly', yearly: 'Yearly', no: 'No' }[gi('recurring')] || '‚Äî';
+  return { weekly: 'Weekly', monthly: 'Monthly', yearly: 'Yearly', no: 'No' }[gi('recurring')] || '—';
 }
 
 /* Dashboard reads Hebrew labels so we translate Yes/No for display only in the review */
 function yesNoEn(val) {
-  if (val === '◊õ◊ü') return '<span style="background:#dbeafe;color:#1e40af;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600">Yes</span>';
-  if (val === '◊ú◊ê') return '<span style="background:#f1f5f9;color:#64748b;padding:2px 9px;border-radius:12px;font-size:11px">No</span>';
-  if (val === '◊ú◊ê ◊ô◊ï◊ì◊¢' || val === '◊ú◊ê ◊ô◊ì◊ï◊¢') return '<span style="background:#f1f5f9;color:#64748b;padding:2px 9px;border-radius:12px;font-size:11px">Unknown</span>';
-  return val || '‚Äî';
+  if (val === 'כן') return '<span style="background:#dbeafe;color:#1e40af;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600">Yes</span>';
+  if (val === 'לא') return '<span style="background:#f1f5f9;color:#64748b;padding:2px 9px;border-radius:12px;font-size:11px">No</span>';
+  if (val === 'לא יודע' || val === 'לא ידוע') return '<span style="background:#f1f5f9;color:#64748b;padding:2px 9px;border-radius:12px;font-size:11px">Unknown</span>';
+  return val || '—';
 }
 
 /* Map stored Hebrew role values back to English for the review card */
 function roleLabel(val) {
-  var map = { '◊ê◊ï◊®◊ó':'Guest','◊ì◊ï◊ë◊®':'Speaker','◊û◊ê◊®◊ó':'Host','◊û◊ß◊ë◊ú ◊§◊®◊°':'Award recipient','◊ê◊ó◊®':'Other' };
-  return map[val] || val || '‚Äî';
+  var map = { 'אורח':'Guest','דובר':'Speaker','מארח':'Host','מקבל פרס':'Award recipient','אחר':'Other' };
+  return map[val] || val || '—';
 }
 
 /* Map stored Hebrew orgknown values */
 function orgknownLabel(val) {
-  var map = { '◊ô◊ì◊ï◊¢ ◊ï◊û◊ï◊õ◊®':'Known & familiar','◊ú◊ê ◊û◊ï◊õ◊® ◊ê◊ô◊©◊ô◊™':'Not personally known' };
-  return map[val] || val || '‚Äî';
+  var map = { 'ידוע ומוכר':'Known & familiar','לא מוכר אישית':'Not personally known' };
+  return map[val] || val || '—';
 }
 
 function row(label, val) {
@@ -864,22 +864,22 @@ function buildReview() {
 
   html += '<div style="font-size:12px;font-weight:600;color:#0f2744;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Summary</div>';
   html += '<table style="width:100%;border-collapse:collapse">';
-  html += row('Under the auspices of', gi('org') || '‚Äî');
-  html += row('Personal ID', gi('personalid') || '‚Äî');
+  html += row('Under the auspices of', gi('org') || '—');
+  html += row('Personal ID', gi('personalid') || '—');
   html += row('Organiser', orgknownLabel(gv('orgknown')));
-  if (gv('orgknown') === '◊ô◊ì◊ï◊¢ ◊ï◊û◊ï◊õ◊®') html += row('Organiser detail', gi('orgknown_detail') || '‚Äî');
-  html += row('Contact', ((gi('fname') + ' ' + gi('lname')).trim()) || '‚Äî');
-  html += row('Event name', gi('evname') || '‚Äî');
-  html += row('Date', gi('evstart') || '‚Äî');
-  html += row('Venue', gi('venue') || '‚Äî');
+  if (gv('orgknown') === 'ידוע ומוכר') html += row('Organiser detail', gi('orgknown_detail') || '—');
+  html += row('Contact', ((gi('fname') + ' ' + gi('lname')).trim()) || '—');
+  html += row('Event name', gi('evname') || '—');
+  html += row('Date', gi('evstart') || '—');
+  html += row('Venue', gi('venue') || '—');
   html += row('Jewish community', yesNoEn(gv('jewishcommunity')));
   html += row('Recurring event', recurringLabel());
   html += row('Entry type', entryLabel());
   html += row('Government institution', yesNoEn(gv('govprox')));
   html += row('Senior persons (VIP)', yesNoEn(gv('vip')));
   html += row('Protests expected', yesNoEn(gv('protest')));
-  var roleVal = gv('eventrole') === '◊ê◊ó◊®' ? (gi('eventrole_other') || 'Other') : roleLabel(gv('eventrole'));
-  html += row('Role at event', roleVal || '‚Äî');
+  var roleVal = gv('eventrole') === 'אחר' ? (gi('eventrole_other') || 'Other') : roleLabel(gv('eventrole'));
+  html += row('Role at event', roleVal || '—');
   html += '</table>';
 
   document.getElementById('reviewCard').innerHTML = html;
@@ -892,7 +892,7 @@ function submitForm() {
   var ref = 'SEC-' + Date.now().toString(36).toUpperCase().slice(-8);
   var score = calcScore();
   /* Store Hebrew level so dashboard badge renders correctly */
-  var level = score <= 3 ? '◊†◊û◊ï◊õ◊î' : score <= 7 ? '◊ë◊ô◊†◊ï◊†◊ô◊™' : '◊í◊ë◊ï◊î◊î';
+  var level = score <= 3 ? 'נמוכה' : score <= 7 ? 'בינונית' : 'גבוהה';
 
   var data = {
     ref: ref,
@@ -947,7 +947,7 @@ function submitForm() {
       existing.push(data);
       localStorage.setItem('securitySubmissions', JSON.stringify(existing));
       console.error('Firebase error:', err);
-      alert('‚ö†Ô∏è Firebase connection error.\nData saved in browser as backup.\n\nError: ' + err.message);
+      alert('⚠️ Firebase connection error.\nData saved in browser as backup.\n\nError: ' + err.message);
       showSuccess(ref);
     });
 }
@@ -960,16 +960,16 @@ function showSuccess(ref) {
 }
 
 /* =========================================================
-   Meeting form ‚Äî validation, score and submission
+   Meeting form — validation, score and submission
    ========================================================= */
 function calcMeetingScore() {
   var s = 0;
   var acq = gv('macq');
-  if (acq === '◊î◊ô◊õ◊®◊ï◊™ ◊§◊í◊ô◊©◊î ◊®◊ê◊©◊ï◊†◊î ◊¢◊ì ◊©◊ú◊ô◊©◊ô◊™') s += 4;
-  else if (acq === '◊†◊§◊í◊©◊†◊ï ◊ë◊¢◊ë◊®') s += 2;
+  if (acq === 'היכרות פגישה ראשונה עד שלישית') s += 4;
+  else if (acq === 'נפגשנו בעבר') s += 2;
   var loc = gv('mloc');
-  if (loc === '◊û◊ï◊°◊ì ◊û◊û◊©◊ú◊™◊ô') s += 2;
-  else if (loc === '◊û◊°◊¢◊ì◊î' || loc === '◊ë◊ô◊™ ◊ß◊§◊î') s += 1;
+  if (loc === 'מוסד ממשלתי') s += 2;
+  else if (loc === 'מסעדה' || loc === 'בית קפה') s += 1;
   return Math.min(s, 10);
 }
 
@@ -994,10 +994,10 @@ function validateMeeting() {
   req('m_personname', 'mf_personname');
   req('m_personrole', 'mf_personrole');
   reqRadio('macq');
-  if (gv('macq') === '◊û◊ï◊õ◊® ◊ï◊û◊î◊ô◊û◊ü ◊¢◊ú ◊ô◊ì◊ô') req('m_acqby', 'mf_acqby');
+  if (gv('macq') === 'מוכר ומהימן על ידי') req('m_acqby', 'mf_acqby');
   req('m_address', 'mf_address');
   reqRadio('mloc');
-  if (gv('mloc') === '◊ê◊ó◊®') req('m_loc_other', 'mf_loc_other');
+  if (gv('mloc') === 'אחר') req('m_loc_other', 'mf_loc_other');
 
   if (!ok && firstErr) {
     firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1011,7 +1011,7 @@ function submitMeeting() {
   if (!validateMeeting()) return;
   var ref = 'MTG-' + Date.now().toString(36).toUpperCase().slice(-8);
   var score = calcMeetingScore();
-  var level = score <= 3 ? '◊†◊û◊ï◊õ◊î' : score <= 7 ? '◊ë◊ô◊†◊ï◊†◊ô◊™' : '◊í◊ë◊ï◊î◊î';
+  var level = score <= 3 ? 'נמוכה' : score <= 7 ? 'בינונית' : 'גבוהה';
 
   var data = {
     ref: ref,
@@ -1052,7 +1052,7 @@ function submitMeeting() {
       existing.push(data);
       localStorage.setItem('securitySubmissions', JSON.stringify(existing));
       console.error('Firebase error:', err);
-      alert('‚ö†Ô∏è Firebase connection error.\nData saved in browser as backup.\n\nError: ' + err.message);
+      alert('⚠️ Firebase connection error.\nData saved in browser as backup.\n\nError: ' + err.message);
       showMeetingSuccess(ref);
     });
 }

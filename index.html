@@ -75,6 +75,26 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .tc-card h3{font-size:18px;color:var(--navy2);margin-bottom:6px}
 .tc-card p{font-size:12px;color:var(--muted);line-height:1.5}
 .tc-hint{text-align:center;font-size:12px;color:var(--subtle);margin-bottom:1rem}
+.resume-box{background:white;border:1px dashed var(--border);border-radius:12px;padding:1rem 1.25rem;margin-top:1.25rem}
+.resume-box .rb-title{font-size:13px;font-weight:600;color:var(--navy2);margin-bottom:3px}
+.resume-box .rb-sub{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+.resume-row{display:flex;gap:8px}
+.resume-row input{flex:1;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:'Inter',sans-serif}
+.resume-row input:focus{outline:none;border-color:var(--navy2);box-shadow:0 0 0 3px rgba(26,58,92,.08)}
+.resume-row button{background:var(--navy2);color:white;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
+.resume-row button:hover{background:var(--navy)}
+.resume-err{font-size:11px;color:var(--red);display:none;margin-top:6px}
+.resume-err.show{display:block}
+.draft-fab{position:fixed;bottom:20px;right:20px;background:#0f2744;color:white;border:none;border-radius:30px;padding:12px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 6px 20px rgba(15,39,68,.3);z-index:50}
+.draft-fab:hover{background:#1a3a5c}
+.edit-banner{display:none;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;margin-bottom:1rem;font-size:12px;color:#1e40af;line-height:1.6}
+.edit-banner.show{display:block}
+.edit-banner strong{font-weight:700;letter-spacing:.05em}
+.summary-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.summary-actions button{border:1px solid var(--border);border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;background:white;color:var(--navy2)}
+.summary-actions button:hover{border-color:var(--navy2);background:#f8fafc}
+.summary-actions button.sa-wa{background:#25d366;color:white;border-color:#25d366}
+.summary-actions button.sa-wa:hover{background:#1eb355}
 </style>
 </head>
 <body>
@@ -107,7 +127,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <p>Short form for a personal meeting — person details, acquaintance level, location and notes.</p>
     </div>
   </div>
+
+  <div class="resume-box">
+    <div class="rb-title">Already started a form?</div>
+    <div class="rb-sub">Enter a reference number to continue a saved draft or update an existing form.</div>
+    <div class="resume-row">
+      <input id="resumeRef" type="text" placeholder="SEC-XXXXXXXX / MTG-XXXXXXXX">
+      <button onclick="resumeByRef()">Continue / Edit</button>
+    </div>
+    <span class="resume-err" id="resumeErr"></span>
+  </div>
 </div>
+
+<button class="draft-fab" id="draftFab" onclick="saveDraft()" style="display:none">💾 Save draft</button>
 
 <!-- ============================================================ -->
 <!-- ===== EVENT FLOW (full form) ===== -->
@@ -127,6 +159,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <div class="fb-config-banner" id="configBanner">
   ⚠️ <strong>Firebase is not configured yet.</strong> The form will work but data will not be saved to the server.<br>
   To connect: edit the <code>FIREBASE_URL</code> variable at the top of the file.
+</div>
+
+<div class="edit-banner" id="editBannerEvent">
+  ✏️ You are editing an existing form — reference <strong id="editRefEvent"></strong>. Your changes will update the same record.
 </div>
 
 <!-- ===== STEP 0 — Organisation ===== -->
@@ -195,6 +231,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <label>Role / Title</label>
         <input id="role" type="text" placeholder="Role / title...">
       </div>
+    </div>
+
+    <div class="section-title">Additional Participants</div>
+    <div class="field">
+      <label>Team members attending this event</label>
+      <textarea id="participants" rows="2" placeholder="If the whole team attends one event, fill the form once and list everyone here — e.g. 008 Sarah; 009 Michal..."></textarea>
     </div>
   </div>
   <div class="nav">
@@ -526,6 +568,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
     <p style="color:#64748b;font-size:13px;margin-bottom:12px">Your reference number:</p>
     <div class="ref-box" id="refBox"></div>
     <p style="font-size:12px;color:#94a3b8;margin-top:10px">Please keep this number for communication with the team.</p>
+    <div class="summary-actions">
+      <button onclick="copySummary('event')">📋 Copy summary</button>
+      <button class="sa-wa" onclick="shareSummary('event')">💬 Send summary on WhatsApp</button>
+    </div>
     <button onclick="location.reload()" style="margin-top:20px;padding:8px 20px;border:1px solid #e2e8f0;border-radius:8px;background:white;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;color:#64748b">Submit another form</button>
   </div>
 </div>
@@ -538,6 +584,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- ============================================================ -->
 <div id="meetingFlow" style="display:none">
   <div class="container">
+    <div class="edit-banner" id="editBannerMeeting">
+      ✏️ You are editing an existing form — reference <strong id="editRefMeeting"></strong>. Your changes will update the same record.
+    </div>
     <div class="card">
       <div class="section-title">Meeting Details</div>
       <div class="grid2">
@@ -555,6 +604,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
           <label><span class="req">*</span>Person's role</label>
           <input id="m_personrole" type="text" placeholder="Role / title...">
           <span class="err-msg">Required field</span>
+        </div>
+        <div class="field" id="mf_date">
+          <label><span class="req">*</span>Meeting date</label>
+          <input id="m_date" type="date">
+          <span class="err-msg">Required field</span>
+        </div>
+        <div class="field">
+          <label>Meeting time</label>
+          <input id="m_time" type="time">
         </div>
       </div>
 
@@ -616,6 +674,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         </div>
       </div>
 
+      <div class="section-title">Additional Participants</div>
+      <div class="field">
+        <label>Team members attending this meeting</label>
+        <textarea id="m_participants" rows="2" placeholder="If several team members attend, fill the form once and list everyone here — e.g. 008 Sarah; 009 Michal..."></textarea>
+      </div>
+
       <div class="section-title">Notes</div>
       <div class="field">
         <label>Notes about the person you are meeting</label>
@@ -633,6 +697,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <p style="color:#64748b;font-size:13px;margin-bottom:12px">Your reference number:</p>
       <div class="ref-box" id="mRefBox"></div>
       <p style="font-size:12px;color:#94a3b8;margin-top:10px">Please keep this number for communication with the team.</p>
+      <div class="summary-actions">
+        <button onclick="copySummary('meeting')">📋 Copy summary</button>
+        <button class="sa-wa" onclick="shareSummary('meeting')">💬 Send summary on WhatsApp</button>
+      </div>
       <button onclick="location.reload()" style="margin-top:20px;padding:8px 20px;border:1px solid #e2e8f0;border-radius:8px;background:white;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;color:#64748b">Submit another form</button>
     </div>
   </div>
@@ -645,9 +713,23 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+/* ===== Edit / draft state ===== */
+var editingRef = null;    // reference loaded for editing (null = new form)
+var editingData = null;   // original data loaded (to preserve admin fields)
+var lastSubmitted = null; // last saved data (for summary / share)
+
+function clearEditing() {
+  editingRef = null;
+  editingData = null;
+  document.getElementById('editBannerEvent').classList.remove('show');
+  document.getElementById('editBannerMeeting').classList.remove('show');
+}
+
 /* ===== Form-type selection ===== */
 function chooseType(t) {
+  clearEditing();
   document.getElementById('typeChooser').style.display = 'none';
+  document.getElementById('draftFab').style.display = 'block';
   if (t === 'event') {
     document.getElementById('eventFlow').style.display = 'block';
     document.getElementById('meetingFlow').style.display = 'none';
@@ -666,9 +748,125 @@ function backToChooser() {
   document.getElementById('eventFlow').style.display = 'none';
   document.getElementById('meetingFlow').style.display = 'none';
   document.getElementById('typeChooser').style.display = 'block';
+  document.getElementById('draftFab').style.display = 'none';
+  clearEditing();
   document.getElementById('pageTitleH').textContent = 'Security Assessment Form';
   document.getElementById('pageSubH').textContent = 'Choose the relevant form type: Event (full form) or Meeting (short form).';
   window.scrollTo(0, 0);
+}
+
+/* ===== Short floating toast ===== */
+function formToast(msg, color) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:' + (color || '#0f2744') + ';color:#fff;padding:12px 22px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;font-family:Inter,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:90%;text-align:center;line-height:1.5';
+  document.body.appendChild(t);
+  setTimeout(function () { t.remove(); }, 4000);
+}
+
+/* ===== Continue / edit by reference ===== */
+function fetchByRef(ref) {
+  if (!FIREBASE_URL || FIREBASE_URL.includes('YOUR-PROJECT')) {
+    var raw = JSON.parse(localStorage.getItem('securitySubmissions') || '[]');
+    var found = raw.filter(function (s) { return (s.ref || s._fbKey) === ref; })[0];
+    return Promise.resolve(found || null);
+  }
+  return fetch(FIREBASE_URL + '/submissions/' + encodeURIComponent(ref) + '.json')
+    .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); });
+}
+
+function resumeByRef() {
+  var errEl = document.getElementById('resumeErr');
+  var ref = (document.getElementById('resumeRef').value || '').trim().toUpperCase();
+  errEl.className = 'resume-err show';
+  errEl.textContent = '';
+  if (!ref) { errEl.textContent = 'Please enter a reference number.'; return; }
+  errEl.textContent = 'Loading...';
+  fetchByRef(ref)
+    .then(function (data) {
+      if (!data) { errEl.textContent = 'No form found with this reference.'; return; }
+      errEl.className = 'resume-err';
+      errEl.textContent = '';
+      openForEditing(ref, data);
+    })
+    .catch(function (err) { errEl.textContent = 'Loading error: ' + err.message; });
+}
+
+function openForEditing(ref, data) {
+  editingRef = ref;
+  editingData = data;
+  var type = data.formType === 'meeting' ? 'meeting' : 'event';
+  document.getElementById('typeChooser').style.display = 'none';
+  document.getElementById('draftFab').style.display = 'block';
+  if (type === 'meeting') {
+    document.getElementById('eventFlow').style.display = 'none';
+    document.getElementById('meetingFlow').style.display = 'block';
+    document.getElementById('pageTitleH').textContent = 'Edit Meeting Form';
+    document.getElementById('pageSubH').textContent = 'Loading the saved details — complete or update and resubmit.';
+    populateMeeting(data);
+    document.getElementById('editRefMeeting').textContent = ref;
+    document.getElementById('editBannerMeeting').classList.add('show');
+  } else {
+    document.getElementById('eventFlow').style.display = 'block';
+    document.getElementById('meetingFlow').style.display = 'none';
+    document.getElementById('pageTitleH').textContent = 'Edit Event Form';
+    document.getElementById('pageSubH').textContent = 'Loading the saved details — complete or update and resubmit.';
+    populateEvent(data);
+    document.getElementById('editRefEvent').textContent = ref;
+    document.getElementById('editBannerEvent').classList.add('show');
+    cur = 0; showStep(0);
+  }
+  window.scrollTo(0, 0);
+}
+
+/* ===== Form-fill helpers ===== */
+function setVal(id, v) { var el = document.getElementById(id); if (el) el.value = (v == null ? '' : v); }
+function restoreRadio(name, val) {
+  if (!val) return;
+  var input = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
+  if (input) { var opt = input.closest('.radio-opt'); if (opt) opt.click(); }
+}
+function setChecks(name, arr) {
+  arr = arr || [];
+  document.querySelectorAll('input[name="' + name + '"]').forEach(function (c) {
+    c.checked = arr.indexOf(c.value) !== -1;
+  });
+}
+
+function populateEvent(d) {
+  ['org','personalid','invitelink','fname','lname','email','phone','role','orgknown_detail',
+   'evname','evstart','evend','evstarttime','evendtime','venue',
+   'vip_detail','vetting_detail','entrytype_other','eventrole_other','extra','participants']
+    .forEach(function (id) { setVal(id, d[id]); });
+  setVal('evcat', d.evcat); setVal('evtype', d.evtype); setVal('recurring', d.recurring);
+  setVal('entrytype', d.entrytype); handleEntryType(d.entrytype || '');
+  restoreRadio('orgknown', d.orgknown);
+  restoreRadio('outdoor', d.outdoor);
+  restoreRadio('jewishcommunity', d.jewishcommunity);
+  restoreRadio('govprox', d.govprox);
+  restoreRadio('vetted', d.vetted);
+  restoreRadio('advertised', d.advertised);
+  restoreRadio('advloc', d.advloc);
+  restoreRadio('vip', d.vip);
+  restoreRadio('protest', d.protest);
+  restoreRadio('eventrole', d.eventrole);
+  setChecks('advchan', d.advchan);
+  setChecks('security', d.security);
+}
+
+function populateMeeting(d) {
+  setVal('m_personalid', d.personalid);
+  setVal('m_personname', d.meetPersonName);
+  setVal('m_personrole', d.meetPersonRole);
+  setVal('m_date', d.meetDate);
+  setVal('m_time', d.meetTime);
+  setVal('m_acqby', d.meetAcqBy);
+  setVal('m_address', d.meetAddress);
+  setVal('m_loc_other', d.meetLocOther);
+  setVal('m_participants', d.participants);
+  setVal('m_notes', d.meetNotes);
+  restoreRadio('macq', d.meetAcq);
+  restoreRadio('mloc', d.meetLocType);
 }
 
 function saveToFirebase(ref, data) {
@@ -888,21 +1086,16 @@ function buildReview() {
   document.getElementById('step4Nav').style.display = 'flex';
 }
 
-function submitForm() {
-  var ref = 'SEC-' + Date.now().toString(36).toUpperCase().slice(-8);
+function collectEventData() {
   var score = calcScore();
-  /* Store Hebrew level so dashboard badge renders correctly */
-  var level = score <= 3 ? 'נמוכה' : score <= 7 ? 'בינונית' : 'גבוהה';
-
-  var data = {
-    ref: ref,
+  return {
     formType: 'event',
-    timestamp: new Date().toISOString(),
-    status: 'new',
     score: score,
-    level: level,
+    /* Store Hebrew level so dashboard badge renders correctly */
+    level: score <= 3 ? 'נמוכה' : score <= 7 ? 'בינונית' : 'גבוהה',
     org: gi('org'),
     personalid: gi('personalid'),
+    participants: gi('participants'),
     invitelink: gi('invitelink'),
     orgknown: gv('orgknown'),
     orgknown_detail: gi('orgknown_detail'),
@@ -925,31 +1118,71 @@ function submitForm() {
     advchan: Array.from(document.querySelectorAll('input[name="advchan"]:checked')).map(function(c) { return c.value; }),
     security: Array.from(document.querySelectorAll('input[name="security"]:checked')).map(function(c) { return c.value; })
   };
+}
+
+/* Final save or draft — shared by event and meeting */
+function finalizeAndSave(data, isDraft, onDone) {
+  var prefix = data.formType === 'meeting' ? 'MTG-' : 'SEC-';
+  var ref = editingRef || (prefix + Date.now().toString(36).toUpperCase().slice(-8));
+  data.ref = ref;
+  var now = new Date().toISOString();
+  if (editingData) {
+    data.timestamp = editingData.timestamp || now;
+    data.lastUpdated = now;
+    if (editingData.manualScore != null) data.manualScore = editingData.manualScore;
+    if (editingData.notes) data.notes = editingData.notes;
+    data.status = isDraft ? 'draft' : (editingData.status && editingData.status !== 'draft' ? editingData.status : 'new');
+  } else {
+    data.timestamp = now;
+    data.status = isDraft ? 'draft' : 'new';
+  }
+  lastSubmitted = data;
+
+  function afterSave() {
+    if (isDraft) {
+      editingRef = ref;
+      editingData = data;
+      var bId = data.formType === 'meeting' ? 'editBannerMeeting' : 'editBannerEvent';
+      var rId = data.formType === 'meeting' ? 'editRefMeeting' : 'editRefEvent';
+      document.getElementById(rId).textContent = ref;
+      document.getElementById(bId).classList.add('show');
+      if (navigator.clipboard) navigator.clipboard.writeText(ref).catch(function(){});
+      formToast('💾 Draft saved: ' + ref + ' (copied). Send this number so someone can complete the form.');
+    } else if (onDone) { onDone(ref); }
+  }
 
   if (!FIREBASE_URL || FIREBASE_URL.includes('YOUR-PROJECT')) {
-    var existing = JSON.parse(localStorage.getItem('securitySubmissions') || '[]');
-    existing.push(data);
-    localStorage.setItem('securitySubmissions', JSON.stringify(existing));
-    showSuccess(ref);
+    var raw = JSON.parse(localStorage.getItem('securitySubmissions') || '[]');
+    var idx = raw.findIndex(function(s) { return (s.ref || s._fbKey) === ref; });
+    if (idx >= 0) raw[idx] = data; else raw.push(data);
+    localStorage.setItem('securitySubmissions', JSON.stringify(raw));
+    afterSave();
     return;
   }
 
   document.getElementById('overlay').classList.add('show');
-
   saveToFirebase(ref, data)
-    .then(function() {
-      document.getElementById('overlay').classList.remove('show');
-      showSuccess(ref);
-    })
+    .then(function() { document.getElementById('overlay').classList.remove('show'); afterSave(); })
     .catch(function(err) {
       document.getElementById('overlay').classList.remove('show');
-      var existing = JSON.parse(localStorage.getItem('securitySubmissions') || '[]');
-      existing.push(data);
-      localStorage.setItem('securitySubmissions', JSON.stringify(existing));
+      var raw = JSON.parse(localStorage.getItem('securitySubmissions') || '[]');
+      raw.push(data);
+      localStorage.setItem('securitySubmissions', JSON.stringify(raw));
       console.error('Firebase error:', err);
       alert('⚠️ Firebase connection error.\nData saved in browser as backup.\n\nError: ' + err.message);
-      showSuccess(ref);
+      afterSave();
     });
+}
+
+/* Save draft — no full validation, based on the active form */
+function saveDraft() {
+  var isMeetingFlow = document.getElementById('meetingFlow').style.display !== 'none';
+  var data = isMeetingFlow ? collectMeetingData() : collectEventData();
+  finalizeAndSave(data, true, null);
+}
+
+function submitForm() {
+  finalizeAndSave(collectEventData(), false, showSuccess);
 }
 
 function showSuccess(ref) {
@@ -993,6 +1226,7 @@ function validateMeeting() {
   req('m_personalid', 'mf_personalid');
   req('m_personname', 'mf_personname');
   req('m_personrole', 'mf_personrole');
+  req('m_date', 'mf_date');
   reqRadio('macq');
   if (gv('macq') === 'מוכר ומהימן על ידי') req('m_acqby', 'mf_acqby');
   req('m_address', 'mf_address');
@@ -1007,22 +1241,18 @@ function validateMeeting() {
   return ok;
 }
 
-function submitMeeting() {
-  if (!validateMeeting()) return;
-  var ref = 'MTG-' + Date.now().toString(36).toUpperCase().slice(-8);
+function collectMeetingData() {
   var score = calcMeetingScore();
-  var level = score <= 3 ? 'נמוכה' : score <= 7 ? 'בינונית' : 'גבוהה';
-
-  var data = {
-    ref: ref,
+  return {
     formType: 'meeting',
-    timestamp: new Date().toISOString(),
-    status: 'new',
     score: score,
-    level: level,
+    level: score <= 3 ? 'נמוכה' : score <= 7 ? 'בינונית' : 'גבוהה',
     personalid: gi('m_personalid'),
+    participants: gi('m_participants'),
     meetPersonName: gi('m_personname'),
     meetPersonRole: gi('m_personrole'),
+    meetDate: gi('m_date'),
+    meetTime: gi('m_time'),
     meetAcq: gv('macq'),
     meetAcqBy: gi('m_acqby'),
     meetAddress: gi('m_address'),
@@ -1030,31 +1260,11 @@ function submitMeeting() {
     meetLocOther: gi('m_loc_other'),
     meetNotes: gi('m_notes')
   };
+}
 
-  if (!FIREBASE_URL || FIREBASE_URL.includes('YOUR-PROJECT')) {
-    var existing = JSON.parse(localStorage.getItem('securitySubmissions') || '[]');
-    existing.push(data);
-    localStorage.setItem('securitySubmissions', JSON.stringify(existing));
-    showMeetingSuccess(ref);
-    return;
-  }
-
-  document.getElementById('overlay').classList.add('show');
-
-  saveToFirebase(ref, data)
-    .then(function() {
-      document.getElementById('overlay').classList.remove('show');
-      showMeetingSuccess(ref);
-    })
-    .catch(function(err) {
-      document.getElementById('overlay').classList.remove('show');
-      var existing = JSON.parse(localStorage.getItem('securitySubmissions') || '[]');
-      existing.push(data);
-      localStorage.setItem('securitySubmissions', JSON.stringify(existing));
-      console.error('Firebase error:', err);
-      alert('⚠️ Firebase connection error.\nData saved in browser as backup.\n\nError: ' + err.message);
-      showMeetingSuccess(ref);
-    });
+function submitMeeting() {
+  if (!validateMeeting()) return;
+  finalizeAndSave(collectMeetingData(), false, showMeetingSuccess);
 }
 
 function showMeetingSuccess(ref) {
@@ -1062,6 +1272,73 @@ function showMeetingSuccess(ref) {
   document.querySelector('#meetingFlow .card').style.display = 'none';
   document.getElementById('meetingNav').style.display = 'none';
   document.getElementById('mSuccessDiv').classList.add('show');
+}
+
+/* =========================================================
+   Summary for internal sharing (copy / WhatsApp)
+   ========================================================= */
+function buildSummaryText(d) {
+  if (!d) return '';
+  var L = [];
+  if (d.formType === 'meeting') {
+    L.push('Meeting summary — ' + (d.ref || ''));
+    L.push('Security level: ' + levelEn(d.level) + ' (score ' + (d.score || 0) + '/10)');
+    L.push('');
+    L.push('Personal ID: ' + (d.personalid || '—'));
+    L.push('Person: ' + (d.meetPersonName || '—'));
+    L.push('Role: ' + (d.meetPersonRole || '—'));
+    L.push('Date: ' + (d.meetDate || '—') + (d.meetTime ? ' ' + d.meetTime : ''));
+    L.push('Acquaintance level: ' + (d.meetAcq || '—'));
+    if (d.meetAcqBy) L.push('Trusted by: ' + d.meetAcqBy);
+    L.push('Address: ' + (d.meetAddress || '—'));
+    L.push('Location: ' + (d.meetLocType === 'אחר' ? (d.meetLocOther || 'Other') : (d.meetLocType || '—')));
+    if (d.participants) L.push('Additional participants: ' + d.participants);
+    if (d.meetNotes) L.push('Notes: ' + d.meetNotes);
+  } else {
+    L.push('Event summary — ' + (d.ref || ''));
+    L.push('Security level: ' + levelEn(d.level) + ' (score ' + (d.score || 0) + '/10)');
+    L.push('');
+    L.push('Under the auspices of: ' + (d.org || '—'));
+    L.push('Personal ID: ' + (d.personalid || '—'));
+    L.push('Contact: ' + ((d.fname || '') + ' ' + (d.lname || '')).trim());
+    if (d.phone) L.push('Phone: ' + d.phone);
+    L.push('Event: ' + (d.evname || '—'));
+    L.push('Date: ' + (d.evstart || '—') + (d.evend && d.evend !== d.evstart ? ' — ' + d.evend : ''));
+    L.push('Venue: ' + (d.venue || '—'));
+    L.push('Category: ' + (d.evcat || '—'));
+    L.push('Senior persons: ' + yesNoText(d.vip));
+    L.push('Protests expected: ' + yesNoText(d.protest));
+    if (d.participants) L.push('Additional participants: ' + d.participants);
+    if (d.extra) L.push('Additional info: ' + d.extra);
+  }
+  return L.join('\n');
+}
+
+/* Stored level is Hebrew — translate for the English summary */
+function levelEn(val) {
+  return { 'נמוכה':'Low','בינונית':'Medium','גבוהה':'High' }[val] || val || '—';
+}
+function yesNoText(val) {
+  return { 'כן':'Yes','לא':'No','לא יודע':'Unknown','לא ידוע':'Unknown' }[val] || val || '—';
+}
+
+function copySummary() {
+  var text = buildSummaryText(lastSubmitted);
+  if (!text) { formToast('No summary available', '#dc2626'); return; }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(
+      function () { formToast('📋 Summary copied'); },
+      function () { formToast('Could not copy automatically', '#dc2626'); }
+    );
+  } else {
+    formToast('Copying is not supported in this browser', '#dc2626');
+  }
+}
+
+function shareSummary() {
+  var text = buildSummaryText(lastSubmitted);
+  if (!text) { formToast('No summary available', '#dc2626'); return; }
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
 }
 </script>
 </body>

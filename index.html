@@ -126,6 +126,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
       <h3>Meeting</h3>
       <p>Short form for a personal meeting — person details, acquaintance level, location and notes.</p>
     </div>
+    <div class="tc-card" onclick="chooseType('package')">
+      <div class="ic">📦</div>
+      <h3>Package</h3>
+      <p>Short form to log an incoming package — recipient, contents description and expected arrival.</p>
+    </div>
   </div>
 
   <div class="resume-box">
@@ -266,9 +271,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <input id="evend" type="date">
         <span class="err-msg">Required field</span>
       </div>
-      <div class="field">
-        <label>Start time</label>
+      <div class="field" id="f_evstarttime">
+        <label><span class="req">*</span>Start time</label>
         <input id="evstarttime" type="time">
+        <span class="err-msg">Required field</span>
       </div>
       <div class="field">
         <label>End time</label>
@@ -610,9 +616,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
           <input id="m_date" type="date">
           <span class="err-msg">Required field</span>
         </div>
-        <div class="field">
-          <label>Meeting time</label>
+        <div class="field" id="mf_time">
+          <label><span class="req">*</span>Meeting time</label>
           <input id="m_time" type="time">
+          <span class="err-msg">Required field</span>
         </div>
       </div>
 
@@ -706,6 +713,57 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   </div>
 </div><!-- /meetingFlow -->
 
+<!-- ============================================================ -->
+<!-- ===== Package flow (short form) ===== -->
+<!-- ============================================================ -->
+<div id="packageFlow" style="display:none">
+  <div class="container">
+    <div class="edit-banner" id="editBannerPackage">
+      ✏️ You are editing an existing package record — reference <strong id="editRefPackage"></strong>. Changes you submit will update the same request.
+    </div>
+    <div class="card">
+      <div class="section-title">Package details</div>
+      <div class="field" id="pf_recipient">
+        <label><span class="req">*</span>Recipient — who is the package for</label>
+        <input id="p_recipient" type="text" placeholder="Recipient name...">
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field" style="margin-top:14px" id="pf_desc">
+        <label><span class="req">*</span>Contents description — what is in the package</label>
+        <textarea id="p_desc" rows="3" placeholder="Describe the package contents..."></textarea>
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="field" style="margin-top:14px" id="pf_date">
+        <label><span class="req">*</span>Expected arrival date</label>
+        <input id="p_date" type="date">
+        <span class="err-msg">Required field</span>
+      </div>
+      <div class="section-title">Notes</div>
+      <div class="field">
+        <label>Additional notes</label>
+        <textarea id="p_notes" rows="2" placeholder="Any relevant information about the package..."></textarea>
+      </div>
+    </div>
+    <div class="nav" id="packageNav">
+      <button class="btn-prev" onclick="backToChooser()">← Back to selection</button>
+      <span class="step-ind">Package form</span>
+      <button class="btn-next" id="pSubmitBtn" onclick="submitPackage()" style="background:#16a34a">Submit form ✓</button>
+    </div>
+    <div class="success" id="pSuccessDiv">
+      <div class="success-icon">✓</div>
+      <h2 style="font-size:20px;margin-bottom:8px">Form submitted successfully!</h2>
+      <p style="color:#64748b;font-size:13px;margin-bottom:12px">Your reference number:</p>
+      <div class="ref-box" id="pRefBox"></div>
+      <p style="font-size:12px;color:#94a3b8;margin-top:10px">Please keep this number for communication with the team.</p>
+      <div class="summary-actions">
+        <button onclick="copySummary('package')">📋 Copy summary</button>
+        <button class="sa-wa" onclick="shareSummary('package')">💬 Send summary on WhatsApp</button>
+      </div>
+      <button onclick="location.reload()" style="margin-top:20px;padding:8px 20px;border:1px solid #e2e8f0;border-radius:8px;background:white;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;color:#64748b">Submit another form</button>
+    </div>
+  </div>
+</div><!-- /packageFlow -->
+
 <script>
 window.addEventListener('DOMContentLoaded', function() {
   if (!FIREBASE_URL || FIREBASE_URL.includes('YOUR-PROJECT')) {
@@ -723,6 +781,7 @@ function clearEditing() {
   editingData = null;
   document.getElementById('editBannerEvent').classList.remove('show');
   document.getElementById('editBannerMeeting').classList.remove('show');
+  document.getElementById('editBannerPackage').classList.remove('show');
 }
 
 /* ===== Form-type selection ===== */
@@ -733,12 +792,20 @@ function chooseType(t) {
   if (t === 'event') {
     document.getElementById('eventFlow').style.display = 'block';
     document.getElementById('meetingFlow').style.display = 'none';
+    document.getElementById('packageFlow').style.display = 'none';
     document.getElementById('pageTitleH').textContent = 'Event Security Assessment Form';
     document.getElementById('pageSubH').textContent = 'Please fill in the details below. This information will be used to assess the required security level for your event.';
     cur = 0; showStep(0);
+  } else if (t === 'package') {
+    document.getElementById('eventFlow').style.display = 'none';
+    document.getElementById('meetingFlow').style.display = 'none';
+    document.getElementById('packageFlow').style.display = 'block';
+    document.getElementById('pageTitleH').textContent = 'Package Form';
+    document.getElementById('pageSubH').textContent = 'Short form to log an incoming package.';
   } else {
     document.getElementById('eventFlow').style.display = 'none';
     document.getElementById('meetingFlow').style.display = 'block';
+    document.getElementById('packageFlow').style.display = 'none';
     document.getElementById('pageTitleH').textContent = 'Meeting Form';
     document.getElementById('pageSubH').textContent = 'Short form to record a personal meeting and assess the acquaintance level.';
   }
@@ -747,11 +814,12 @@ function chooseType(t) {
 function backToChooser() {
   document.getElementById('eventFlow').style.display = 'none';
   document.getElementById('meetingFlow').style.display = 'none';
+  document.getElementById('packageFlow').style.display = 'none';
   document.getElementById('typeChooser').style.display = 'block';
   document.getElementById('draftFab').style.display = 'none';
   clearEditing();
   document.getElementById('pageTitleH').textContent = 'Security Assessment Form';
-  document.getElementById('pageSubH').textContent = 'Choose the relevant form type: Event (full form) or Meeting (short form).';
+  document.getElementById('pageSubH').textContent = 'Choose the relevant form type: Event, Meeting or Package.';
   window.scrollTo(0, 0);
 }
 
@@ -795,20 +863,31 @@ function resumeByRef() {
 function openForEditing(ref, data) {
   editingRef = ref;
   editingData = data;
-  var type = data.formType === 'meeting' ? 'meeting' : 'event';
+  var type = data.formType === 'meeting' ? 'meeting' : (data.formType === 'package' ? 'package' : 'event');
   document.getElementById('typeChooser').style.display = 'none';
   document.getElementById('draftFab').style.display = 'block';
   if (type === 'meeting') {
     document.getElementById('eventFlow').style.display = 'none';
     document.getElementById('meetingFlow').style.display = 'block';
+    document.getElementById('packageFlow').style.display = 'none';
     document.getElementById('pageTitleH').textContent = 'Edit Meeting Form';
     document.getElementById('pageSubH').textContent = 'Loading the saved details — complete or update and resubmit.';
     populateMeeting(data);
     document.getElementById('editRefMeeting').textContent = ref;
     document.getElementById('editBannerMeeting').classList.add('show');
+  } else if (type === 'package') {
+    document.getElementById('eventFlow').style.display = 'none';
+    document.getElementById('meetingFlow').style.display = 'none';
+    document.getElementById('packageFlow').style.display = 'block';
+    document.getElementById('pageTitleH').textContent = 'Edit Package Form';
+    document.getElementById('pageSubH').textContent = 'Loading the saved details — complete or update and resubmit.';
+    populatePackage(data);
+    document.getElementById('editRefPackage').textContent = ref;
+    document.getElementById('editBannerPackage').classList.add('show');
   } else {
     document.getElementById('eventFlow').style.display = 'block';
     document.getElementById('meetingFlow').style.display = 'none';
+    document.getElementById('packageFlow').style.display = 'none';
     document.getElementById('pageTitleH').textContent = 'Edit Event Form';
     document.getElementById('pageSubH').textContent = 'Loading the saved details — complete or update and resubmit.';
     populateEvent(data);
@@ -867,6 +946,13 @@ function populateMeeting(d) {
   setVal('m_notes', d.meetNotes);
   restoreRadio('macq', d.meetAcq);
   restoreRadio('mloc', d.meetLocType);
+}
+
+function populatePackage(d) {
+  setVal('p_recipient', d.pkgRecipient);
+  setVal('p_desc', d.pkgDesc);
+  setVal('p_date', d.pkgDate);
+  setVal('p_notes', d.pkgNotes);
 }
 
 function saveToFirebase(ref, data) {
@@ -959,6 +1045,7 @@ function validateStep(s) {
     req('evname', 'f_evname');
     req('evstart', 'f_evstart');
     req('evend', 'f_evend');
+    req('evstarttime', 'f_evstarttime');
     req('venue', 'f_venue');
     var ec = document.getElementById('evcat');
     var fw = document.getElementById('f_evcat');
@@ -1122,7 +1209,7 @@ function collectEventData() {
 
 /* Final save or draft — shared by event and meeting */
 function finalizeAndSave(data, isDraft, onDone) {
-  var prefix = data.formType === 'meeting' ? 'MTG-' : 'SEC-';
+  var prefix = data.formType === 'meeting' ? 'MTG-' : (data.formType === 'package' ? 'PKG-' : 'SEC-');
   var ref = editingRef || (prefix + Date.now().toString(36).toUpperCase().slice(-8));
   data.ref = ref;
   var now = new Date().toISOString();
@@ -1142,8 +1229,8 @@ function finalizeAndSave(data, isDraft, onDone) {
     if (isDraft) {
       editingRef = ref;
       editingData = data;
-      var bId = data.formType === 'meeting' ? 'editBannerMeeting' : 'editBannerEvent';
-      var rId = data.formType === 'meeting' ? 'editRefMeeting' : 'editRefEvent';
+      var bId = data.formType === 'meeting' ? 'editBannerMeeting' : (data.formType === 'package' ? 'editBannerPackage' : 'editBannerEvent');
+      var rId = data.formType === 'meeting' ? 'editRefMeeting' : (data.formType === 'package' ? 'editRefPackage' : 'editRefEvent');
       document.getElementById(rId).textContent = ref;
       document.getElementById(bId).classList.add('show');
       if (navigator.clipboard) navigator.clipboard.writeText(ref).catch(function(){});
@@ -1176,8 +1263,10 @@ function finalizeAndSave(data, isDraft, onDone) {
 
 /* Save draft — no full validation, based on the active form */
 function saveDraft() {
-  var isMeetingFlow = document.getElementById('meetingFlow').style.display !== 'none';
-  var data = isMeetingFlow ? collectMeetingData() : collectEventData();
+  var data;
+  if (document.getElementById('packageFlow').style.display !== 'none') data = collectPackageData();
+  else if (document.getElementById('meetingFlow').style.display !== 'none') data = collectMeetingData();
+  else data = collectEventData();
   finalizeAndSave(data, true, null);
 }
 
@@ -1227,6 +1316,7 @@ function validateMeeting() {
   req('m_personname', 'mf_personname');
   req('m_personrole', 'mf_personrole');
   req('m_date', 'mf_date');
+  req('m_time', 'mf_time');
   reqRadio('macq');
   if (gv('macq') === 'מוכר ומהימן על ידי') req('m_acqby', 'mf_acqby');
   req('m_address', 'mf_address');
@@ -1275,6 +1365,54 @@ function showMeetingSuccess(ref) {
 }
 
 /* =========================================================
+   Package form — validation and submission
+   ========================================================= */
+function validatePackage() {
+  var ok = true;
+  var firstErr = null;
+  function req(id, fid) {
+    var el = document.getElementById(id);
+    var fw = document.getElementById(fid);
+    if (!fw) return;
+    if (!el || !el.value.trim()) { fw.classList.add('error'); ok = false; if (!firstErr) firstErr = fw; }
+    else { fw.classList.remove('error'); }
+  }
+  req('p_recipient', 'pf_recipient');
+  req('p_desc', 'pf_desc');
+  req('p_date', 'pf_date');
+  if (!ok && firstErr) {
+    firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    firstErr.classList.add('err-shake');
+    setTimeout(function() { firstErr.classList.remove('err-shake'); }, 400);
+  }
+  return ok;
+}
+
+function collectPackageData() {
+  return {
+    formType: 'package',
+    score: 0,
+    level: '—',
+    pkgRecipient: gi('p_recipient'),
+    pkgDesc: gi('p_desc'),
+    pkgDate: gi('p_date'),
+    pkgNotes: gi('p_notes')
+  };
+}
+
+function submitPackage() {
+  if (!validatePackage()) return;
+  finalizeAndSave(collectPackageData(), false, showPackageSuccess);
+}
+
+function showPackageSuccess(ref) {
+  document.getElementById('pRefBox').textContent = ref;
+  document.querySelector('#packageFlow .card').style.display = 'none';
+  document.getElementById('packageNav').style.display = 'none';
+  document.getElementById('pSuccessDiv').classList.add('show');
+}
+
+/* =========================================================
    Summary for internal sharing (copy / WhatsApp)
    ========================================================= */
 function buildSummaryText(d) {
@@ -1294,6 +1432,13 @@ function buildSummaryText(d) {
     L.push('Location: ' + (d.meetLocType === 'אחר' ? (d.meetLocOther || 'Other') : (d.meetLocType || '—')));
     if (d.participants) L.push('Additional participants: ' + d.participants);
     if (d.meetNotes) L.push('Notes: ' + d.meetNotes);
+  } else if (d.formType === 'package') {
+    L.push('Package summary — ' + (d.ref || ''));
+    L.push('');
+    L.push('Recipient: ' + (d.pkgRecipient || '—'));
+    L.push('Contents: ' + (d.pkgDesc || '—'));
+    L.push('Expected arrival: ' + (d.pkgDate || '—'));
+    if (d.pkgNotes) L.push('Notes: ' + d.pkgNotes);
   } else {
     L.push('Event summary — ' + (d.ref || ''));
     L.push('Security level: ' + levelEn(d.level) + ' (score ' + (d.score || 0) + '/10)');
